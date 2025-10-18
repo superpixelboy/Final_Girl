@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://7mjfs3rafyqj"]
+[gd_scene load_steps=12 format=3 uid="uid://7mjfs3rafyqj"]
 
 [ext_resource type="PackedScene" uid="uid://bn8rerkwg7yu2" path="res://models/LobbyRough.glb" id="1_sc73o"]
 [ext_resource type="PackedScene" uid="uid://ccvnhoywyekhq" path="res://models/Decorations/SM_ReceptionDesk.fbx" id="2_n451v"]
@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://2glri606mylw" path="res://models/Doors/SM_DoubleDoor_DR.fbx" id="6_ckrr6"]
 [ext_resource type="PackedScene" uid="uid://jxwkvr7ted5n" path="res://models/Doors/SM_SingleDoor.fbx" id="7_kqeo6"]
 [ext_resource type="PackedScene" uid="uid://c21pwk3jqmmw8" path="res://models/LobbyRough.tscn" id="8_gs65x"]
+[ext_resource type="PackedScene" uid="uid://54rc2uvxs1g6" path="res://Cameras/fixed_camera_zone.tscn" id="9_fbexd"]
+[ext_resource type="PackedScene" uid="uid://johjbjph3rmd" path="res://Cameras/FCZ_Loby_Desk.tscn" id="10_ee0to"]
+[ext_resource type="PackedScene" uid="uid://dgxmlaogc76c" path="res://Cameras/FCZ_Lobby_Hall_West.tscn" id="11_lfef2"]
 
 [node name="Hospital" type="Node3D"]
 
@@ -22,7 +25,7 @@ transform = Transform3D(-4.657796e-08, 0, -1.0655797, 0, 1.0655797, 0, 1.0655797
 transform = Transform3D(0.12917277, 0, 0, 0, 0.12917277, 0, 0, 0, 0.12917277, -3.5737488, 3.5196548, -1.1546297)
 
 [node name="Player" parent="." instance=ExtResource("4_kqeo6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3766127, -0.04701963, -0.10179734)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.962811, -0.04701963, -3.8115401)
 
 [node name="SM_DoubleDoor_DL" parent="." instance=ExtResource("5_n451v")]
 transform = Transform3D(1.2462324, 0, 0.09044296, 0, 1.1282303, 0, -0.0960674, 0, 1.1732695, -2.1651826, 1.084693, -5.22989)
@@ -96,4 +99,16 @@ spot_range = 13.84307
 spot_angle = 48.290844
 
 [node name="LobbyRough2" parent="." instance=ExtResource("8_gs65x")]
-transform = Transform3D(0.10759721, 0, 0, 0, 0.10759721, 0, 0, 0, 0.10759721, -3.7164154, -0.19287688, -1.1598337)
+transform = Transform3D(0.10759721, 0, 0, 0, 0.10759721, 0, 0, 0, 0.10759721, -3.7126255, -0.18331891, -1.1585283)
+
+[node name="FCZ_Lobby_Entry" parent="." instance=ExtResource("9_fbexd")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.4642935, -1.0887792, -3.8543735)
+
+[node name="FCZ_Lobby_Entry2" parent="." instance=ExtResource("9_fbexd")]
+transform = Transform3D(-0.61677486, 0, 0.78713953, 0, 1, 0, -0.78713953, 0, -0.61677486, -9.247102, -1.6664498, 3.7795267)
+
+[node name="FixedCameraZone" parent="." instance=ExtResource("10_ee0to")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.582282, -1.9991074, 0.8641361)
+
+[node name="FixedCameraZone2" parent="." instance=ExtResource("11_lfef2")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.7569685, -2.0617685, 3.8729854)

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgxmlaogc76c"]
+
+[ext_resource type="Script" uid="uid://b852rr48covmu" path="res://Cameras/fixed_camera_zone.gd" id="1_nk416"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mw18t"]
+
+[node name="FixedCameraZone" type="Area3D" node_paths=PackedStringArray("camera")]
+script = ExtResource("1_nk416")
+camera = NodePath("Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 3.053891, 0)
+shape = SubResource("BoxShape3D_mw18t")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9917004, 0.12857056, 0, -0.12857056, 0.9917004, 0.31006384, 3.8187118, 3.0058508)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d2b2c36kk68sf"]
+[gd_scene load_steps=4 format=3 uid="uid://d2b2c36kk68sf"]
 
 [ext_resource type="PackedScene" uid="uid://vcnwadl4u6ql" path="res://models/Player/female_lowpoly_mesh2.tscn" id="1_2p5qh"]
 [ext_resource type="Script" uid="uid://bqmaek3uxlw4s" path="res://models/Player/player.gd" id="1_rgwmj"]
@@ -6,8 +6,6 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rgwmj"]
 radius = 0.18164063
 height = 1.8544922
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_rgwmj"]
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_rgwmj")
@@ -22,10 +20,3 @@ shape = SubResource("CapsuleShape3D_rgwmj")
 [node name="CameraPivot" type="Node3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37248886, 1.804881, 0)
-
-[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
-transform = Transform3D(-1, 3.5558045e-08, -7.986468e-08, 0, 0.9135454, 0.40673664, 8.742278e-08, 0.40673664, -0.9135454, 0.4035213, 0, 0)
-shape = SubResource("SphereShape3D_rgwmj")
-
-[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
-unique_name_in_owner = true
