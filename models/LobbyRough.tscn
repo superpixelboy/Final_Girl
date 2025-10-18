@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c21pwk3jqmmw8"]
+
+[ext_resource type="PackedScene" uid="uid://bn8rerkwg7yu2" path="res://models/LobbyRough.glb" id="1_5dolq"]
+
+[node name="LobbyRough" type="Node3D"]
+
+[node name="LobbyRough" parent="." instance=ExtResource("1_5dolq")]

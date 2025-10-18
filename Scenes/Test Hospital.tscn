@@ -1,0 +1,99 @@
+[gd_scene load_steps=9 format=3 uid="uid://7mjfs3rafyqj"]
+
+[ext_resource type="PackedScene" uid="uid://bn8rerkwg7yu2" path="res://models/LobbyRough.glb" id="1_sc73o"]
+[ext_resource type="PackedScene" uid="uid://ccvnhoywyekhq" path="res://models/Decorations/SM_ReceptionDesk.fbx" id="2_n451v"]
+[ext_resource type="PackedScene" uid="uid://osej84qlu04k" path="res://models/Decorations/LobbyCeilingRough.glb" id="3_ckrr6"]
+[ext_resource type="PackedScene" uid="uid://d2b2c36kk68sf" path="res://models/Player/Player.tscn" id="4_kqeo6"]
+[ext_resource type="PackedScene" uid="uid://dsloa7uduxjik" path="res://models/Doors/SM_DoubleDoor_DL.fbx" id="5_n451v"]
+[ext_resource type="PackedScene" uid="uid://2glri606mylw" path="res://models/Doors/SM_DoubleDoor_DR.fbx" id="6_ckrr6"]
+[ext_resource type="PackedScene" uid="uid://jxwkvr7ted5n" path="res://models/Doors/SM_SingleDoor.fbx" id="7_kqeo6"]
+[ext_resource type="PackedScene" uid="uid://c21pwk3jqmmw8" path="res://models/LobbyRough.tscn" id="8_gs65x"]
+
+[node name="Hospital" type="Node3D"]
+
+[node name="LobbyRough" parent="." instance=ExtResource("1_sc73o")]
+transform = Transform3D(0.10759721, 0, 0, 0, 0.10759721, 0, 0, 0, 0.10759721, -3.7164154, -0.19287688, -1.1598337)
+visible = false
+
+[node name="SM_ReceptionDesk" parent="." instance=ExtResource("2_n451v")]
+transform = Transform3D(-4.657796e-08, 0, -1.0655797, 0, 1.0655797, 0, 1.0655797, 0, -4.657796e-08, -6.3760858, 0.4585816, -0.67925376)
+
+[node name="LobbyCeilingRough" parent="." instance=ExtResource("3_ckrr6")]
+transform = Transform3D(0.12917277, 0, 0, 0, 0.12917277, 0, 0, 0, 0.12917277, -3.5737488, 3.5196548, -1.1546297)
+
+[node name="Player" parent="." instance=ExtResource("4_kqeo6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3766127, -0.04701963, -0.10179734)
+
+[node name="SM_DoubleDoor_DL" parent="." instance=ExtResource("5_n451v")]
+transform = Transform3D(1.2462324, 0, 0.09044296, 0, 1.1282303, 0, -0.0960674, 0, 1.1732695, -2.1651826, 1.084693, -5.22989)
+
+[node name="SM_DoubleDoor_DR" parent="." instance=ExtResource("6_ckrr6")]
+transform = Transform3D(1.2747877, 0, 0, 0, 1.1509299, 0, 0, 0, 1.1509299, -3.9710271, 1.056432, -5.2847023)
+
+[node name="SM_SingleDoor" parent="." instance=ExtResource("7_kqeo6")]
+transform = Transform3D(1, 0, 0, 0, 1.1286485, 0, 0, 0, 0.8303899, 2.273923, 1.082825, -1.0539676)
+
+[node name="SM_SingleDoor2" parent="SM_SingleDoor" instance=ExtResource("7_kqeo6")]
+transform = Transform3D(0.99999946, 0, 0, 0, 0.9609594, 0, 0, 0, 1.000062, 7.17397, 0.061726153, 5.5329747)
+
+[node name="SM_SingleDoor2" parent="SM_SingleDoor/SM_SingleDoor2" instance=ExtResource("7_kqeo6")]
+transform = Transform3D(0.9999998, 0, 0, 0, 0.9609593, 0, 0, 0, 1.000062, -18.452124, -0.028054357, 0.27116108)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2075577, 1.8635774, 0)
+light_energy = 1.66
+light_indirect_energy = 0.0
+light_size = 0.041
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.984327, 1.2728496, 3.3491726)
+light_energy = 1.66
+light_indirect_energy = 0.0
+light_size = 0.041
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.061501503, 0.998107, 0, -0.998107, -0.061501503, -1.6205044, 3.0764103, 0)
+spot_range = 13.84307
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SpotLight3D"]
+transform = Transform3D(1, 0, 0, 0, 0.8987482, -0.43846524, 0, 0.43846524, 0.8987482, -1.6205044, 3.628972, 0)
+light_energy = 1.33
+light_indirect_energy = 0.505
+light_volumetric_fog_energy = 2.814
+light_size = 0.866
+spot_range = 13.84307
+spot_angle = 48.290844
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SpotLight3D/SpotLight3D"]
+transform = Transform3D(1, 1.6718086e-05, -0.0002086982, 0.00016104002, 0.5755763, 0.81774795, 0.00013379294, -0.81774807, 0.57557625, -1.6205044, -4.968021, 2.071231)
+light_energy = 1.33
+light_indirect_energy = 0.505
+light_volumetric_fog_energy = 2.814
+light_size = 0.866
+spot_range = 13.84307
+spot_angle = 48.290844
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="SpotLight3D"]
+transform = Transform3D(0.74216306, -0.0010995194, -0.6702186, -0.041219495, 0.9980308, -0.04728151, 0.6689507, 0.062716655, 0.7406563, -1.6205044, 1.7500416, -0.08172846)
+spot_range = 13.84307
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SpotLight3D/SpotLight3D2"]
+transform = Transform3D(1, 0, 0, 0, 0.8987482, -0.43846524, 0, 0.43846524, 0.8987482, -1.6205044, 3.628972, 0)
+light_energy = 1.33
+light_indirect_energy = 0.505
+light_volumetric_fog_energy = 2.814
+light_size = 0.866
+spot_range = 13.84307
+spot_angle = 48.290844
+
+[node name="SpotLight3D" type="SpotLight3D" parent="SpotLight3D/SpotLight3D2/SpotLight3D"]
+transform = Transform3D(1, 1.6718086e-05, -0.0002086982, 0.00016104002, 0.5755763, 0.81774795, 0.00013379294, -0.81774807, 0.57557625, -1.6205044, -4.968021, 2.071231)
+light_energy = 1.33
+light_indirect_energy = 0.505
+light_volumetric_fog_energy = 2.814
+light_size = 0.866
+spot_range = 13.84307
+spot_angle = 48.290844
+
+[node name="LobbyRough2" parent="." instance=ExtResource("8_gs65x")]
+transform = Transform3D(0.10759721, 0, 0, 0, 0.10759721, 0, 0, 0, 0.10759721, -3.7164154, -0.19287688, -1.1598337)

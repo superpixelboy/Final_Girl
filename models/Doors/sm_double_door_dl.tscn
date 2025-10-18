@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://6lgxuyq6o1o6"]
+
+[ext_resource type="PackedScene" uid="uid://dsloa7uduxjik" path="res://models/Doors/SM_DoubleDoor_DL.fbx" id="1_f4lek"]
+
+[node name="SM_DoubleDoor_DL" instance=ExtResource("1_f4lek")]
