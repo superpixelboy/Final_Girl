@@ -1,0 +1,510 @@
+[gd_scene load_steps=39 format=3 uid="uid://bi2bgol3b2cxr"]
+
+[ext_resource type="PackedScene" uid="uid://bvexokqfbl8hl" path="res://models/Hospital Asset Pack/models/SM_GurneyBed.fbx" id="1_1eqqd"]
+[ext_resource type="PackedScene" uid="uid://cip20uy2534vs" path="res://models/Hospital Asset Pack/models/SM_BlisterPack.fbx" id="2_3la4u"]
+[ext_resource type="PackedScene" uid="uid://cl1csdxqy1kwn" path="res://models/Hospital Asset Pack/models/SM_WheelChair.fbx" id="3_x7bi6"]
+[ext_resource type="PackedScene" uid="uid://kefi0sale7dw" path="res://models/Hospital Asset Pack/models/SM_Bedframe.fbx" id="4_ro5ai"]
+[ext_resource type="PackedScene" uid="uid://d0r6ang2la4gs" path="res://models/Hospital Asset Pack/models/SM_BedCover.fbx" id="5_sy202"]
+[ext_resource type="PackedScene" uid="uid://cjw5jedsiwtsj" path="res://models/Hospital Asset Pack/models/SM_CurtainRail.fbx" id="6_3ngcx"]
+[ext_resource type="PackedScene" uid="uid://dxpml3t0licbc" path="res://models/Hospital Asset Pack/models/SM_BedCurtain.fbx" id="7_vavsx"]
+[ext_resource type="PackedScene" uid="uid://cji3ox3yi0gs6" path="res://models/Hospital Asset Pack/models/SM_PatientRoom_Wall_1.fbx" id="8_7nxgd"]
+[ext_resource type="PackedScene" uid="uid://ba5qvrxiogrtu" path="res://models/Hospital Asset Pack/models/SM_Patient_Room_Window_Wall.fbx" id="9_1uj71"]
+[ext_resource type="Shader" uid="uid://c4tk78q0dssug" path="res://Scenes/post_processing.gdshader" id="10_jp0me"]
+[ext_resource type="PackedScene" uid="uid://1hehtp57b6ic" path="res://models/Hospital Asset Pack/models/SM_PatientRoom_Floor.fbx" id="11_12og3"]
+[ext_resource type="PackedScene" uid="uid://boarx8826mckh" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_1.fbx" id="12_aauvr"]
+[ext_resource type="PackedScene" uid="uid://bfid1xcb6cvh8" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_2.fbx" id="13_aib12"]
+[ext_resource type="PackedScene" uid="uid://bwoj40v5hu3fg" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_3.fbx" id="14_3wwpe"]
+[ext_resource type="PackedScene" uid="uid://3ce5cahdxn3a" path="res://models/Hospital Asset Pack/models/SM_Hallway_Doorway.fbx" id="15_fi24f"]
+[ext_resource type="PackedScene" uid="uid://bsvddl2vs3gwn" path="res://models/Player/SM_Reception_Doorway.fbx" id="16_htl08"]
+[ext_resource type="PackedScene" uid="uid://dtb37mfu4o6tg" path="res://models/Hospital Asset Pack/models/SM_SingleDoor.fbx" id="17_u4m5n"]
+[ext_resource type="PackedScene" uid="uid://dsloa7uduxjik" path="res://models/Doors/SM_DoubleDoor_DL.fbx" id="18_82nbi"]
+[ext_resource type="PackedScene" uid="uid://bbh1sy0p5xtwm" path="res://models/Hospital Asset Pack/models/SM_DoubleDoor_DR.fbx" id="19_e8lif"]
+[ext_resource type="PackedScene" uid="uid://68dnfxcgw3ah" path="res://models/Player/player.tscn" id="20_6wtli"]
+[ext_resource type="Script" uid="uid://b852rr48covmu" path="res://Cameras/fixed_camera_zone.gd" id="21_oildv"]
+[ext_resource type="Script" uid="uid://c3d7onmbxfp37" path="res://Scenes/hiding_spot.gd" id="22_x7bi6"]
+[ext_resource type="Script" uid="uid://d0gc3lvgwira6" path="res://Scenes/interaction_ui.gd" id="23_ro5ai"]
+[ext_resource type="Script" uid="uid://ca4lftqxe312" path="res://Scenes/door_crack_overlay.gd" id="24_ro5ai"]
+[ext_resource type="PackedScene" uid="uid://br4il4dqddgxy" path="res://models/Killer/killer.tscn" id="25_sy202"]
+[ext_resource type="Script" uid="uid://5su7dc6x8mvr" path="res://Scenes/killer_spawn_trigger.gd" id="26_3ngcx"]
+[ext_resource type="Script" uid="uid://cgtoe8jurgomx" path="res://Scenes/escape_zone.gd" id="27_vavsx"]
+[ext_resource type="PackedScene" uid="uid://d1qqygm63efa5" path="res://models/Puzzles/HappyFaceLock.glb" id="28_7nxgd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_piipy"]
+render_priority = 0
+shader = ExtResource("10_jp0me")
+shader_parameter/dither_amount = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_bc7nb"]
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1eqqd"]
+size = Vector3(1, 1, 2.75)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3la4u"]
+size = Vector3(1.25, 1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x7bi6"]
+size = Vector3(1.75, 1, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ro5ai"]
+size = Vector3(1.25, 1, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sy202"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_3ngcx"]
+vertices = PackedVector3Array(-16.028372, 0.3936415, -3.383965, -16.028372, 0.3936415, 6.366035, 17.721628, 0.3936415, 6.366035, 17.721628, 0.3936415, -3.383965)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vavsx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7nxgd"]
+
+[node name="PatientRoom" type="Node3D"]
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 0.2, 0, 0, 0, 8, 0, 0, 0)
+
+[node name="Ceiling" type="CSGBox3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 0.2, 0, 0, 0, 8, 0, 3, 3)
+visible = false
+size = Vector3(5, 1, 1.75)
+
+[node name="Wall_North" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -4)
+size = Vector3(10, 3, 0.2)
+
+[node name="Wall__East" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.9, 5, 1.5, -0.25)
+size = Vector3(0.2, 3, 8)
+
+[node name="Wall_West" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 0)
+size = Vector3(0.2, 3, 8)
+
+[node name="SM_GurneyBed" parent="." instance=ExtResource("1_1eqqd")]
+transform = Transform3D(0.7901123, 0, 0.6129621, 0, 1, 0, -0.6129621, 0, 0.7901123, -3.9675303, 0.38420832, 2.7481904)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5340757, 1.620388, -0.5025549)
+omni_range = 6.079048
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2159243, -0.12961197, -0.7525549)
+omni_range = 6.079048
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5340757, 0.12038803, 5.497445)
+omni_range = 6.079048
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2159243, -0.12961197, 0.2474451)
+omni_range = 6.079048
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.465924, 0.12038803, 5.497445)
+omni_range = 6.079048
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2159243, -0.12961197, 0.2474451)
+omni_range = 6.079048
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.715923, 0.12038803, 5.497445)
+omni_range = 6.079048
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2159243, -0.12961197, -0.7525549)
+omni_range = 6.079048
+
+[node name="OmniLight3D6" type="OmniLight3D" parent="OmniLight3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.965923, 0.12038803, 0.7474451)
+omni_range = 6.079048
+
+[node name="OmniLight3D" type="OmniLight3D" parent="OmniLight3D/OmniLight3D6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2159243, -0.12961197, -0.7525549)
+omni_range = 6.079048
+
+[node name="SM_BlisterPack" parent="." instance=ExtResource("2_3la4u")]
+transform = Transform3D(0.8304987, 0, -0.5570206, 0, 1, 0, 0.5570206, 0, 0.8304987, -3.317028, 0.81822306, -2.859993)
+
+[node name="SM_WheelChair" parent="." instance=ExtResource("3_x7bi6")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -3.420933, 0.5614399, 0.10138011)
+
+[node name="SM_Bedframe" parent="." instance=ExtResource("4_ro5ai")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.1020637, 0.58174384, -2.6780503)
+
+[node name="SM_Bedframe2" parent="SM_Bedframe" instance=ExtResource("4_ro5ai")]
+transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -0.4635787, -0.0031944513, -4.5051217)
+
+[node name="SM_BedCover" parent="SM_Bedframe" instance=ExtResource("5_sy202")]
+transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -0.44767237, 0.14988244, -4.49645)
+
+[node name="SM_BedCover" parent="." instance=ExtResource("5_sy202")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.0933924, 0.7348207, -2.6939566)
+
+[node name="SM_CurtainRail" parent="." instance=ExtResource("6_3ngcx")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.6134651, 2.8075025, -2.0384686)
+
+[node name="SM_BedCurtain" parent="." instance=ExtResource("7_vavsx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.109636545, 1.5464447, -4.12539)
+
+[node name="SM_BedCurtain2" parent="." instance=ExtResource("7_vavsx")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.19733524, 1.3781753, -3.9152503)
+
+[node name="SM_PatientRoom_Wall_1" parent="." instance=ExtResource("8_7nxgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.91984, 1.4330204, -1.9255061)
+
+[node name="SM_PatientRoom_Wall_2" parent="SM_PatientRoom_Wall_1" instance=ExtResource("8_7nxgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.84687)
+
+[node name="SM_Patient_Room_Window_Wall" parent="." instance=ExtResource("9_1uj71")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.1115928, 1.4466317, -3.8494925)
+
+[node name="ScreenQuad" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4230129, 0.27156937, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_piipy")
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_bc7nb")
+
+[node name="SM_Hallway_Wall_1" parent="." instance=ExtResource("12_aauvr")]
+transform = Transform3D(-4.3711374e-08, 0, 10.08, 0, 1, 0, -0.9999997, 0, -4.4061082e-07, -0.5, 1.25, 6.75)
+
+[node name="SM_Hallway_Wall_2" parent="SM_Hallway_Wall_1" instance=ExtResource("12_aauvr")]
+transform = Transform3D(-4.371134e-08, 0, 4.0320024, 0, 1.4, 0, -0.99999946, 0, -1.762443e-07, 4.5000043, 0.25, 1.8888891)
+
+[node name="SM_Hallway_Wall_3" parent="SM_Hallway_Wall_1" instance=ExtResource("12_aauvr")]
+transform = Transform3D(-5.0400014, 0, -1.9332595e-07, 0, 1.32, 0, 2.42161e-07, 0, -0.3991678, 2.7900853, 0.25, -0.7857133)
+
+[node name="SM_Hallway_Wall_4" parent="SM_Hallway_Wall_1" instance=ExtResource("12_aauvr")]
+transform = Transform3D(-6.0963874, 0, -8.584833e-08, 0, 1.2, 0, 3.1019272e-07, 0, -0.27675638, 3.2500043, 0.25, 0.7728178)
+
+[node name="SM_Hallway_Wall_5" parent="SM_Hallway_Wall_1" instance=ExtResource("13_aib12")]
+transform = Transform3D(-4.3711406e-08, 0, -1.0000004, 0, 1.3, 0, 0.09920635, 0, -4.336447e-09, 1.7523222, 0.25, -1.5376487)
+
+[node name="SM_Hallway_Wall_3" parent="." instance=ExtResource("14_3wwpe")]
+transform = Transform3D(1, 0, 0, 0, 1.4, 0, 0, 0, 2.1, 12.5, 1.25, -0.5)
+
+[node name="SM_Hallway_Wall_2" parent="." instance=ExtResource("13_aib12")]
+transform = Transform3D(-4.371139e-08, 0, -1.6, 0, 1.3, 0, 1, 0, -6.9938224e-08, 15.5, 1.25, -4.25)
+
+[node name="SM_Hallway_Doorway" parent="." instance=ExtResource("15_fi24f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.25, 1.25, 5.25)
+
+[node name="SM_Hallway_Doorway2" parent="SM_Hallway_Doorway" instance=ExtResource("15_fi24f")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.75, 0, -9.25)
+
+[node name="SM_Reception_Doorway" parent="." instance=ExtResource("16_htl08")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.75, 1.25, 3.75)
+
+[node name="SM_SingleDoor" parent="." instance=ExtResource("17_u4m5n")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7, 1.25, 3.775)
+
+[node name="SM_DoubleDoor_DL" parent="." instance=ExtResource("18_82nbi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.75, 1.25, -4)
+
+[node name="SM_DoubleDoor_DR" parent="." instance=ExtResource("19_e8lif")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.25, 1.25, -4)
+
+[node name="Player" parent="." instance=ExtResource("20_6wtli")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -1.75, 0.25, -1.5)
+
+[node name="CameraTriggers" type="Node3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.25, 3, 0)
+
+[node name="ZonePatientRoom1" type="Area3D" parent="CameraTriggers" node_paths=PackedStringArray("camera")]
+script = ExtResource("21_oildv")
+camera = NodePath("../../Cameras/CamPatientRoom1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraTriggers/ZonePatientRoom1"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -2.0000002, -1.5, -4.7)
+shape = SubResource("BoxShape3D_1eqqd")
+
+[node name="ZonePatientRoom2" type="Area3D" parent="CameraTriggers" node_paths=PackedStringArray("camera")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.4999998, -1.5, -6.5)
+script = ExtResource("21_oildv")
+camera = NodePath("../../Cameras/CamPatientRoom2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraTriggers/ZonePatientRoom2"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -0.375, 0.25, -4.95)
+shape = SubResource("BoxShape3D_3la4u")
+
+[node name="ZonePatientRoom3" type="Area3D" parent="CameraTriggers" node_paths=PackedStringArray("camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -1.5, -0.25)
+script = ExtResource("21_oildv")
+camera = NodePath("../../Cameras/CamPatientRoom3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraTriggers/ZonePatientRoom3"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1.3749988, 0.25, -1.7000003)
+shape = SubResource("BoxShape3D_x7bi6")
+
+[node name="ZoneHall1" type="Area3D" parent="CameraTriggers" node_paths=PackedStringArray("camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -2.25, -0.5000007)
+script = ExtResource("21_oildv")
+camera = NodePath("../../Cameras/CamHall1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraTriggers/ZoneHall1"]
+transform = Transform3D(2.9999995, 0, -2.842171e-14, 0, 3, 0, 0, 0, 9.6, -1.624999, 0.25, -1.6999998)
+shape = SubResource("BoxShape3D_x7bi6")
+
+[node name="ZoneHall2" type="Area3D" parent="CameraTriggers" node_paths=PackedStringArray("camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -2.25, -0.5000007)
+script = ExtResource("21_oildv")
+camera = NodePath("../../Cameras/CamHall2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraTriggers/ZoneHall2"]
+transform = Transform3D(2.9999995, 0, -2.842171e-14, 0, 3, 0, 0, 0, 9.6, -0.625, 0.25, 12.8)
+shape = SubResource("BoxShape3D_ro5ai")
+
+[node name="Cameras" type="Node3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.25, 3, 0)
+
+[node name="CamPatientRoom1" type="Camera3D" parent="Cameras"]
+transform = Transform3D(1, 1.1313341e-08, 1.489429e-09, -1.131334e-08, 0.9659259, 0.25881907, 1.489429e-09, -0.25881907, 0.9659258, -0.99999994, -0.5, 0.75)
+current = true
+
+[node name="CamPatientRoom2" type="Camera3D" parent="Cameras"]
+transform = Transform3D(-0.5000002, 0.2241439, -0.8365163, 9.446964e-09, 0.9659259, 0.2588191, 0.8660254, 0.12940958, -0.48296306, -1.4999989, -0.25, -8.75)
+
+[node name="CamPatientRoom3" type="Camera3D" parent="Cameras"]
+transform = Transform3D(1, 1.5361515e-08, -1.318129e-07, -1.53615e-08, 1, 1.0430813e-07, 1.318129e-07, -1.0430813e-07, 1, 2.7500007, -1.75, 0.25)
+
+[node name="CamHall1" type="Camera3D" parent="Cameras"]
+transform = Transform3D(1, 5.963044e-08, -1.4878401e-07, -5.963042e-08, 1, 8.9406974e-08, 1.4878401e-07, -8.940697e-08, 1, -5.250001, -1.75, 5.75)
+
+[node name="CamHall2" type="Camera3D" parent="Cameras"]
+transform = Transform3D(0.70710665, 0.3535535, -0.61237246, 8.9485264e-10, 0.8660254, 0.5000001, 0.7071069, -0.35355338, 0.61237234, -6.0000033, -0.75, 13.25)
+
+[node name="HidingSpotCloset" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.75, 1, 4)
+collision_layer = 16
+script = ExtResource("22_x7bi6")
+hide_camera_path = NodePath("Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HidingSpotCloset"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("BoxShape3D_sy202")
+
+[node name="Camera3D" type="Camera3D" parent="HidingSpotCloset"]
+transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, 0, 0.5, 0)
+fov = 60.0
+
+[node name="DoorCrackUI" type="CanvasLayer" parent="."]
+layer = -1
+script = ExtResource("24_ro5ai")
+
+[node name="LeftSlit" type="ColorRect" parent="DoorCrackUI"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 400.0
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="RightSlit" type="ColorRect" parent="DoorCrackUI"]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -399.0
+offset_right = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("23_ro5ai")
+
+[node name="PromptPanel" type="PanelContainer" parent="UI"]
+custom_minimum_size = Vector2(0, -100)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="UI/PromptPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Press E"
+
+[node name="NavRegion" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_3ngcx")
+
+[node name="SM_PatientRoom_Floor" parent="NavRegion" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7, 0, -2)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor4" parent="NavRegion/SM_PatientRoom_Floor" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.049999952, 0, 3.5)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor4" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.049999952, 0, 3.5)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor4" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7, 0, -7)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3000002, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor4" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.049999952, 0, 3.5)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3000002, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor4" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.049999952, 0, 3.5)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor5" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.05, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3000002, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor4" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.049999952, 0, 3.5)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3000002, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor4" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.049999952, 0, 3.5)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor3" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.55, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="SM_PatientRoom_Floor2" parent="NavRegion/SM_PatientRoom_Floor/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor5/SM_PatientRoom_Floor4/SM_PatientRoom_Floor4/SM_PatientRoom_Floor3/SM_PatientRoom_Floor2" instance=ExtResource("11_12og3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0, 0)
+
+[node name="Killer" parent="." instance=ExtResource("25_sy202")]
+transform = Transform3D(-2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, -2.9802322e-08, -14.399895, 0.37999177, 5.280926)
+patrol_points_path = NodePath("../KillerPatrolPoints")
+
+[node name="KillerPatrolPoints" type="Node3D" parent="."]
+
+[node name="Point1" type="Marker3D" parent="KillerPatrolPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.25, 0.75, 5.25)
+
+[node name="Point2" type="Marker3D" parent="KillerPatrolPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.75, 0.75, 5.25)
+
+[node name="Point3" type="Marker3D" parent="KillerPatrolPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.75, 0.75, -1.75)
+
+[node name="Point4" type="Marker3D" parent="KillerPatrolPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.75, 0.75, 5.25)
+
+[node name="KillerSpawnTrigger" type="Area3D" parent="."]
+transform = Transform3D(-2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, -2.9802322e-08, 1.1001053, 1.6299918, 5.280926)
+script = ExtResource("26_3ngcx")
+killer_path = NodePath("../Killer")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KillerSpawnTrigger"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("BoxShape3D_vavsx")
+
+[node name="EscapeZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.25, 0, -3.75)
+script = ExtResource("27_vavsx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EscapeZone"]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0.75, 0.25)
+shape = SubResource("BoxShape3D_7nxgd")
+
+[node name="HappyFaceLock2" parent="." instance=ExtResource("28_7nxgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.75, 2.25, 0.75)

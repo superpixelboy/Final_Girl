@@ -1,0 +1,32 @@
+[gd_scene load_steps=8 format=3 uid="uid://we3y4suvqi3d"]
+
+[ext_resource type="PackedScene" uid="uid://bn8rerkwg7yu2" path="res://models/LobbyRough.glb" id="1_beh3c"]
+[ext_resource type="Shader" uid="uid://wv60g2nmbw17" path="res://environment_object.gdshader" id="2_kegik"]
+[ext_resource type="Texture2D" uid="uid://ba6ryl57eotsy" path="res://models/LobbyRough_Wall1.png" id="3_kegik"]
+[ext_resource type="Texture2D" uid="uid://ckh4aaycismd5" path="res://models/LobbyRough_Floor1.png" id="3_p8umy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hytpd"]
+render_priority = 0
+shader = ExtResource("2_kegik")
+shader_parameter/color_texture = ExtResource("3_kegik")
+shader_parameter/vertex_wobble = 1.0
+shader_parameter/affine_mapping = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p8umy"]
+albedo_texture = ExtResource("3_kegik")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fmpb0"]
+render_priority = 0
+shader = ExtResource("2_kegik")
+shader_parameter/color_texture = ExtResource("3_p8umy")
+shader_parameter/vertex_wobble = 1.0
+shader_parameter/affine_mapping = 1.0
+
+[node name="LobbyRough" instance=ExtResource("1_beh3c")]
+
+[node name="Walls" parent="." index="0"]
+material_override = SubResource("ShaderMaterial_hytpd")
+material_overlay = SubResource("StandardMaterial3D_p8umy")
+
+[node name="Floor" parent="." index="8"]
+material_override = SubResource("ShaderMaterial_fmpb0")

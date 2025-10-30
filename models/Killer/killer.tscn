@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://br4il4dqddgxy"]
+
+[ext_resource type="Script" uid="uid://dbwruadyetrn7" path="res://killer.gd" id="1_eikwx"]
+[ext_resource type="PackedScene" uid="uid://ymfbsb74ftb6" path="res://models/Killer/KillerTest.glb" id="2_erd01"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3l7b"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_srdra"]
+
+[node name="Killer" type="CharacterBody3D"]
+script = ExtResource("1_eikwx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_i3l7b")
+
+[node name="KillerTest" parent="." instance=ExtResource("2_erd01")]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.5
+target_desired_distance = 0.5
+avoidance_enabled = true
+
+[node name="DetectionArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 1, 1.75)
+shape = SubResource("SphereShape3D_srdra")
