@@ -4,6 +4,7 @@ class_name HidingSpot
 ## Hiding spot with mouse look and door crack UI effect
 
 @export var hide_camera_path: NodePath
+@export var door_crack_ui_path: NodePath 
 @export var peek_angle_limit: float = 30.0
 @export var peek_sensitivity: float = 0.15
 
@@ -20,13 +21,13 @@ var current_peek_rotation: float = 0.0
 
 # Door crack UI
 @onready var door_crack_ui: CanvasLayer = null
+var interaction_ui = null  
 
 signal player_entered_hiding
 signal player_exited_hiding
 
 
 func _ready() -> void:
-	# Connect signals
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	
@@ -38,32 +39,34 @@ func _ready() -> void:
 			base_camera_rotation = hide_camera.rotation
 			print("HidingSpot: Base camera rotation stored: ", base_camera_rotation)
 	
-	# Find door crack UI
-	var ui_paths = ["/root/Floor5/DoorCrackUI", "../DoorCrackUI", "../../DoorCrackUI", "/root/*/DoorCrackUI"]
-	for path in ui_paths:
-		if has_node(path):
-			door_crack_ui = get_node(path)
-			print("HidingSpot: Found door crack UI at: ", path)
-			break
+	# Get door crack UI via export
+	if door_crack_ui_path:
+		door_crack_ui = get_node(door_crack_ui_path)
+		print("HidingSpot: Found door crack UI at: ", door_crack_ui_path)
 	
 	if not door_crack_ui:
 		print("HidingSpot: Warning - No door crack UI found (optional)")
+		
+	call_deferred("find_interaction_ui")
+
 
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_in_range = true
 		player_reference = body
-		if player_reference.has_method("set_interaction_prompt"):
-			player_reference.set_interaction_prompt(true, "Press E to Hide")
+		# Show prompt directly instead of going through player
+		if interaction_ui and interaction_ui.has_method("show_prompt"):
+			interaction_ui.show_prompt("Press E to Hide")
 
 
 func _on_body_exited(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		if not is_occupied:
 			player_in_range = false
-			if player_reference and player_reference.has_method("set_interaction_prompt"):
-				player_reference.set_interaction_prompt(false, "")
+			# Hide prompt directly
+			if interaction_ui and interaction_ui.has_method("hide_prompt"):
+				interaction_ui.hide_prompt()
 			player_reference = null
 
 
@@ -163,3 +166,27 @@ func handle_mouse_peek(event: InputEventMouseMotion) -> void:
 	
 	# Apply relative to base rotation
 	hide_camera.rotation.y = base_camera_rotation.y + current_peek_rotation
+	
+func find_interaction_ui():
+	# Method 1: Check ui group
+	var ui_nodes = get_tree().get_nodes_in_group("ui")
+	if ui_nodes.size() > 0:
+		interaction_ui = ui_nodes[0]
+		print("HidingSpot: Found UI via group: ", interaction_ui.name)
+		return
+	
+	# Method 2: Try common paths
+	var ui_paths = [
+		"/root/Floor5/UI",
+		"/root/patient_room/UI",
+		"../UI",
+		"../../UI"
+	]
+	
+	for path in ui_paths:
+		if has_node(path):
+			interaction_ui = get_node(path)
+			print("HidingSpot: Found UI via path: ", path)
+			return
+	
+	print("WARNING HidingSpot: Could not find UI!")

@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://4yetscvebo2"]
+
+[ext_resource type="PackedScene" uid="uid://y41t437o8wp6" path="res://models/Hospital Asset Pack/models/SM_Reception_Wall_1.fbx" id="1_4j6xg"]
+[ext_resource type="Texture2D" uid="uid://bi0yc3b8la40l" path="res://models/Hospital Asset Pack/models/Watchman_GraphicNovel Logo.png" id="2_odgjy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fm3ev"]
+albedo_texture = ExtResource("2_odgjy")
+uv1_scale = Vector3(1, 1.3, 1.25)
+uv1_offset = Vector3(0, -0.3, 0)
+
+[node name="SM_Reception_Wall_1" instance=ExtResource("1_4j6xg")]
+
+[node name="SM_Reception_Wall_1" parent="." index="0"]
+transform = Transform3D(-2.5816178e-07, 0.99999994, 0, -5.906053, -4.3711385e-08, 0, 0, 0, 1.3618989, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_fm3ev")

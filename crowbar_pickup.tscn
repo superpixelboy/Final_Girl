@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://uex5tvngoebh"]
+
+[ext_resource type="Script" uid="uid://cwyhmuhiku4fs" path="res://crowbar_pickup.gd" id="1_3fspr"]
+[ext_resource type="PackedScene" uid="uid://cljd5rf1e56ih" path="res://models/Hospital Asset Pack/models/SM_DoorHandle.fbx" id="2_a7452"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_11c6s"]
+radius = 1.0
+
+[node name="CrowbarPickup" type="Area3D"]
+collision_layer = 2
+script = ExtResource("1_3fspr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_11c6s")
+
+[node name="CrowbarMesh" parent="." instance=ExtResource("2_a7452")]
+transform = Transform3D(4.9500003, 0, 0, 0, 1.7, 0, 0, 0, 1.4, -0.25, 0, 0)

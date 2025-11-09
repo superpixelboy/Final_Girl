@@ -1,0 +1,12 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxeh1jt4kcfwd"]
+
+[ext_resource type="PackedScene" uid="uid://1hehtp57b6ic" path="res://models/Hospital Asset Pack/models/SM_PatientRoom_Floor.fbx" id="1_7ivew"]
+[ext_resource type="Texture2D" uid="uid://crkgj3wldab63" path="res://M_Patient_Floor_smiley2.png" id="2_e7jjc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5t4m"]
+albedo_texture = ExtResource("2_e7jjc")
+
+[node name="SM_PatientRoom_Floor" instance=ExtResource("1_7ivew")]
+
+[node name="SM_PatientRoom_Floor" parent="." index="0"]
+material_override = SubResource("StandardMaterial3D_w5t4m")

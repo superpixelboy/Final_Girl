@@ -1,6 +1,6 @@
 extends CharacterBody3D
-## TANK CONTROLS + ANIMATION SYSTEM + HIDING MECHANIC (DEBUG VERSION)
-## Classic survival horror movement with animations and hiding spots
+## ULTRA DEBUG VERSION - Makes crowbar IMPOSSIBLE to miss
+## With giant size, bright debug cube, and tons of debug output
 
 @export_group("Movement")
 @export var walk_speed := 2.5
@@ -9,17 +9,22 @@ extends CharacterBody3D
 @export var acceleration := 8.0
 
 @export_group("Animation")
-@export var turn_animation_threshold := 0.3  ## How much rotation before playing turn anims
+@export var turn_animation_threshold := 0.3
 
 @export_group("Setup")
-@export var starting_camera: Camera3D  ## Assign your first fixed camera here
+@export var starting_camera: Camera3D
 
 @export_group("Hiding")
-@export var interaction_range := 1.5  ## How close to hiding spot to interact
+@export var interaction_range := 1.5
+
+@export_group("Item Holding - ULTRA DEBUG MODE")
+@export var hand_position := Vector3(0.0, 2.0, 5.0)  ## WAY OUT FRONT, HEAD HEIGHT
+@export var hand_item_scale := Vector3(5.0, 5.0, 5.0)  ## GIANT SIZE
+#@export var show_debug_cube := true  ## Show bright cube at hand position
 
 # Movement state
 var is_running := false
-var can_move := true  ## For cutscenes/interactions later
+var can_move := true
 
 # Hiding state
 enum State { NORMAL, HIDING }
@@ -29,15 +34,25 @@ var current_hiding_spot: Area3D = null
 # UI
 var interaction_prompt_visible: bool = false
 var interaction_prompt_text: String = ""
-@onready var interaction_ui: CanvasLayer = null  # Will be set in _ready
+@onready var interaction_ui: CanvasLayer = null
+
+# Item holding system
+var held_item_name: String = ""
+var held_item_node: Node3D = null
+var right_hand: Node3D = null
+var debug_cube: MeshInstance3D = null  # Visual indicator
 
 # Components
 @onready var _animation_player: AnimationPlayer = $AnimationPlayer
 @onready var _skin: Node3D = $Armature/Skeleton3D
-@onready var _armature: Node3D = $Armature  ## Reference to hide/show model
+@onready var _armature: Node3D = $Armature
 
 
 func _ready() -> void:
+	print("\n========================================")
+	print("PLAYER ULTRA DEBUG MODE ACTIVATED")
+	print("========================================\n")
+	
 	# Activate starting camera if assigned
 	if starting_camera:
 		starting_camera.current = true
@@ -52,7 +67,6 @@ func _ready() -> void:
 	# DEBUG: Check armature reference
 	if _armature:
 		print("DEBUG Player: Armature found: ", _armature.name)
-		print("DEBUG Player: Armature visible: ", _armature.visible)
 	else:
 		print("ERROR Player: Armature NOT found!")
 	
@@ -65,6 +79,24 @@ func _ready() -> void:
 	
 	if not interaction_ui:
 		push_warning("Player: No UI CanvasLayer found for interaction prompts")
+	
+	# CREATE RIGHT HAND POSITION
+	print("\n>>> CREATING RIGHT HAND POSITION <<<")
+	right_hand = Node3D.new()
+	right_hand.name = "RightHandPosition"
+	add_child(right_hand)
+	right_hand.position = hand_position
+	
+	print("✓ RightHandPosition created")
+	print("  Local position: ", right_hand.position)
+	print("  World position: ", right_hand.global_position)
+	
+
+	
+	print("\n========================================\n")
+
+
+
 
 
 func _physics_process(delta: float) -> void:
@@ -81,7 +113,7 @@ func process_normal_movement(delta: float) -> void:
 	if not can_move:
 		return
 	
-	# Check for interaction input FIRST (before movement)
+	# Check for interaction input FIRST
 	if Input.is_action_just_pressed("interact"):
 		try_interact()
 	
@@ -101,7 +133,7 @@ func process_normal_movement(delta: float) -> void:
 	var move_direction := -global_transform.basis.z * move_input
 	move_direction.y = 0.0
 	
-	# Direct velocity (no lerp = instant stop)
+	# Direct velocity
 	velocity.x = move_direction.x * current_speed
 	velocity.z = move_direction.z * current_speed
 	
@@ -111,65 +143,51 @@ func process_normal_movement(delta: float) -> void:
 	
 	move_and_slide()
 	
-	# Update animations based on input
+	# Update animations
 	_update_animation(move_input, rotation_input)
 	
-	# Character model always faces movement direction
+	# Character model faces movement direction
 	if move_input != 0:
-		_skin.rotation.y = 0  # Face forward relative to CharacterBody3D
+		_skin.rotation.y = 0
 
 
 func process_hiding_state(_delta: float) -> void:
 	"""Player is hiding - limited controls"""
-	# Can only exit hiding
 	if Input.is_action_just_pressed("interact"):
-		print("DEBUG Player: E pressed while hiding - attempting to exit")
 		if current_hiding_spot and current_hiding_spot.has_method("exit_hiding"):
 			current_hiding_spot.exit_hiding()
-		else:
-			print("ERROR Player: No hiding spot or no exit_hiding method!")
 	
-	# No movement while hiding
 	velocity = Vector3.ZERO
 	
-	# Keep idle animation
 	if _animation_player.has_animation("idle"):
 		if _animation_player.current_animation != "idle":
 			_animation_player.play("idle")
 
 
 func _update_animation(move_input: float, rotation_input: float) -> void:
-	# Priority: Movement animations override turning
-	
 	if abs(move_input) > 0.1:
-		# Moving forward or backward
 		if is_running:
-			# You can add a run animation later
 			if _animation_player.has_animation("Animations/walk"):
 				if _animation_player.current_animation != "Animations/walk":
 					_animation_player.play("Animations/walk")
-					_animation_player.speed_scale = 1.5  # Speed up for running
+					_animation_player.speed_scale = 1.5
 		else:
 			if _animation_player.has_animation("Animations/walk"):
 				if _animation_player.current_animation != "Animations/walk":
 					_animation_player.play("Animations/walk")
-					_animation_player.speed_scale = 1.0  # Normal walk speed
+					_animation_player.speed_scale = 1.0
 	
 	elif abs(rotation_input) > turn_animation_threshold:
-		# Rotating in place (no forward/back movement)
 		if rotation_input < 0:
-			# Turning left
 			if _animation_player.has_animation("Animations/turn_left"):
 				if _animation_player.current_animation != "Animations/turn_left":
 					_animation_player.play("Animations/turn_left")
 		else:
-			# Turning right
 			if _animation_player.has_animation("Animations/turn_right"):
 				if _animation_player.current_animation != "Animations/turn_right":
 					_animation_player.play("Animations/turn_right")
 	
 	else:
-		# Not moving or turning - idle
 		if _animation_player.has_animation("idle"):
 			if _animation_player.current_animation != "idle":
 				_animation_player.play("idle")
@@ -180,26 +198,22 @@ func _update_animation(move_input: float, rotation_input: float) -> void:
 # ============================================================================
 
 func try_interact() -> void:
-	"""Try to interact with nearby objects (like hiding spots)"""
 	if current_state != State.NORMAL:
 		return
 	
-	# Check for hiding spots in range using a sphere cast
 	var space_state = get_world_3d().direct_space_state
 	var query = PhysicsShapeQueryParameters3D.new()
 	
-	# Create a small sphere around player to check for hiding spots
 	var shape = SphereShape3D.new()
 	shape.radius = interaction_range
 	query.shape = shape
 	query.transform = global_transform
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
-	query.collision_mask = 16  # Layer 5 (hiding spots should be on this layer)
+	query.collision_mask = 16
 	
 	var results = space_state.intersect_shape(query, 10)
 	
-	# Try to interact with closest hiding spot
 	for result in results:
 		var area = result["collider"]
 		if area is Area3D and area.has_method("try_hide_player"):
@@ -209,91 +223,134 @@ func try_interact() -> void:
 
 
 func enter_hiding_state(hiding_spot: Area3D) -> void:
-	"""Called by hiding spot when player enters"""
-	print("DEBUG Player: enter_hiding_state() called")
 	current_state = State.HIDING
 	current_hiding_spot = hiding_spot
 	
-	# Disable collision so killer walks past
-	set_collision_layer_value(1, false)  # Disable layer 1
-	set_collision_mask_value(1, false)   # Disable mask 1
+	set_collision_layer_value(1, false)
+	set_collision_mask_value(1, false)
 	
-	# Hide interaction prompt
 	set_interaction_prompt(false, "")
 	
-	# Lock movement
 	can_move = false
 	velocity = Vector3.ZERO
 	
-	# HIDE PLAYER MODEL
-	print("DEBUG Player: Attempting to hide model...")
-	print("DEBUG Player: _armature exists? ", _armature != null)
 	if _armature:
-		print("DEBUG Player: _armature.visible BEFORE: ", _armature.visible)
 		_armature.visible = false
-		print("DEBUG Player: _armature.visible AFTER: ", _armature.visible)
-		print("Player: Model hidden ✓")
-	else:
-		print("ERROR Player: Cannot hide model - _armature is null!")
 	
-	# Play idle animation (even though not visible)
 	if _animation_player.has_animation("idle"):
 		_animation_player.play("idle")
-	
-	print("Player: Entered hiding state")
 
 
 func exit_hiding_state() -> void:
-	"""Called by hiding spot when player exits"""
-	print("DEBUG Player: ========== exit_hiding_state() called ==========")
-	print("DEBUG Player: Current state: ", State.keys()[current_state])
-	
 	current_state = State.NORMAL
 	current_hiding_spot = null
 	
-	# Re-enable collision
-	set_collision_layer_value(1, true)  # Enable layer 1
-	set_collision_mask_value(1, true)   # Enable mask 1
-	print("DEBUG Player: Collision re-enabled")
+	set_collision_layer_value(1, true)
+	set_collision_mask_value(1, true)
 	
-	# SHOW PLAYER MODEL
-	print("DEBUG Player: Attempting to show model...")
-	print("DEBUG Player: _armature exists? ", _armature != null)
 	if _armature:
-		print("DEBUG Player: _armature.visible BEFORE: ", _armature.visible)
 		_armature.visible = true
-		print("DEBUG Player: _armature.visible AFTER: ", _armature.visible)
-		print("Player: Model visible ✓")
-	else:
-		print("ERROR Player: Cannot show model - _armature is null!")
 	
-	# Unlock movement
 	can_move = true
-	print("DEBUG Player: Movement unlocked")
+
+
+func set_interaction_prompt(show: bool, text: String = "") -> void:
+	if not interaction_ui:
+		return
 	
-	print("Player: Exited hiding state")
-	print("DEBUG Player: ========== exit_hiding_state() complete ==========")
-
-
-func set_interaction_prompt(visible: bool, text: String = "") -> void:
-	"""Show/hide interaction prompt UI"""
-	interaction_prompt_visible = visible
-	interaction_prompt_text = text
-	
-	# Update UI if available
-	if interaction_ui and interaction_ui.has_method("show_prompt"):
-		if visible:
-			interaction_ui.show_prompt(text)
-		else:
-			interaction_ui.hide_prompt()
-	elif visible:
-		# Fallback: print to console if no UI
-		print("Interaction: ", text)
-
+	if show and interaction_ui.has_method("show_prompt"):
+		interaction_ui.show_prompt(text)
+	elif interaction_ui.has_method("hide_prompt"):
+		interaction_ui.hide_prompt()
 
 
 # ============================================================================
-# EXISTING MOVEMENT LOCK FUNCTIONS (preserved)
+# ITEM HOLDING SYSTEM - ULTRA DEBUG VERSION
+# ============================================================================
+
+func equip_item(item_name_param: String, item_node: Node3D) -> void:
+	print("\n========================================")
+	print(">>> EQUIPPING ITEM <<<")
+	print("========================================")
+	print("Item name: ", item_name_param)
+	print("Item node: ", item_node.name if item_node else "NULL")
+	print("Item type: ", item_node.get_class() if item_node else "NULL")
+	
+	if not right_hand:
+		print("❌ ERROR: No right_hand node!")
+		return
+	
+	print("✓ Right hand exists")
+	print("  Hand local pos: ", right_hand.position)
+	print("  Hand world pos: ", right_hand.global_position)
+	
+	# Store references
+	held_item_name = item_name_param
+	held_item_node = item_node
+	
+	# Remove from world
+	if item_node.get_parent():
+		print("✓ Removing item from parent: ", item_node.get_parent().name)
+		item_node.get_parent().remove_child(item_node)
+	
+	# Add to hand
+	print("✓ Adding item to right hand...")
+	right_hand.add_child(item_node)
+	
+	# Reset transform
+	item_node.position = Vector3.ZERO
+	item_node.rotation = Vector3.ZERO
+	item_node.scale = hand_item_scale
+	item_node.visible = true
+	
+	print("✓ Item equipped!")
+	print("  Item local pos: ", item_node.position)
+	print("  Item world pos: ", item_node.global_position)
+	print("  Item scale: ", item_node.scale)
+	print("  Item visible: ", item_node.visible)
+	print("  Item parent: ", item_node.get_parent().name if item_node.get_parent() else "NULL")
+	
+	# List all meshes in the item
+	print("\n  Item children:")
+	for child in item_node.get_children():
+		print("    - ", child.name, " (", child.get_class(), ") visible: ", child.visible)
+	
+	print("========================================\n")
+	
+	# Hide debug cube now that we have an item
+	if debug_cube:
+		debug_cube.visible = false
+
+
+func unequip_item() -> void:
+	if held_item_node:
+		held_item_node.queue_free()
+	
+	held_item_name = ""
+	held_item_node = null
+	
+
+
+
+func has_item() -> bool:
+	return held_item_name != ""
+
+
+func get_held_item_name() -> String:
+	return held_item_name
+
+
+func use_held_item() -> bool:
+	if held_item_node and held_item_node.has_method("use_item"):
+		var success = held_item_node.use_item()
+		if success:
+			unequip_item()
+			return true
+	return false
+
+
+# ============================================================================
+# MOVEMENT LOCK FUNCTIONS
 # ============================================================================
 
 func lock_movement() -> void:
@@ -312,24 +369,16 @@ func unlock_movement() -> void:
 # ============================================================================
 
 func is_hiding() -> bool:
-	"""Check if player is currently hiding"""
 	return current_state == State.HIDING
 
 
 func get_hiding_spot() -> Area3D:
-	"""Get current hiding spot (null if not hiding)"""
 	return current_hiding_spot
 
+
 func die() -> void:
-	"""Player has been killed by the killer"""
 	print("Player: DEATH!")
-	
-	# Disable all controls
 	can_move = false
 	velocity = Vector3.ZERO
-	
-	# Optional: Play death animation or sound here
-	
-	# Wait a moment, then reload
 	await get_tree().create_timer(2.0).timeout
 	get_tree().reload_current_scene()

@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://c3npwufbfwhuk"]
+
+[ext_resource type="PackedScene" uid="uid://boarx8826mckh" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_1.fbx" id="1_4smj2"]
+[ext_resource type="Texture2D" uid="uid://b4u4cix56cusl" path="res://M_Floor5_Hall_wall.png" id="2_4smj2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mx46g"]
+albedo_texture = ExtResource("2_4smj2")
+
+[node name="SM_Hallway_Wall_1" instance=ExtResource("1_4smj2")]
+
+[node name="SM_Hallway_Wall_1" parent="." index="0"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_mx46g")

@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://s3bc681fohw3"]
+
+[ext_resource type="PackedScene" uid="uid://cip20uy2534vs" path="res://models/Hospital Asset Pack/models/SM_BlisterPack.fbx" id="1_dv7nh"]
+[ext_resource type="Texture2D" uid="uid://dnlxegf33f55g" path="res://models/LightSwitchNoCover.png" id="2_5deac"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o3261"]
+albedo_texture = ExtResource("2_5deac")
+
+[node name="LightSwitch" instance=ExtResource("1_dv7nh")]
+
+[node name="SM_BlisterPack" parent="." index="0"]
+transform = Transform3D(0.99891037, 0.046670586, 0, -0.046670586, 0.99891037, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_o3261")

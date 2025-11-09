@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4eauttxdk7rt"]
+
+[ext_resource type="PackedScene" uid="uid://d0ng2obelapcc" path="res://models/Player/SM_PatientMonitor.fbx" id="1_6jgbr"]
+
+[node name="SM_PatientMonitor" instance=ExtResource("1_6jgbr")]

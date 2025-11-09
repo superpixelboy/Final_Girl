@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://btwkuddyp4pjy"]
+
+[ext_resource type="Script" uid="uid://d1q3gpxowcm6p" path="res://locked_door.gd" id="1_x4nd7"]
+[ext_resource type="PackedScene" uid="uid://jxwkvr7ted5n" path="res://models/Doors/SM_SingleDoor.fbx" id="2_42grv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mq1x3"]
+
+[node name="LockedDoor" type="Area3D"]
+collision_layer = 2
+script = ExtResource("1_x4nd7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_mq1x3")
+
+[node name="SM_SingleDoor" parent="." instance=ExtResource("2_42grv")]
