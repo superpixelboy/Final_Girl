@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cj83so0co0hog"]
+
+[ext_resource type="PackedScene" uid="uid://d1qqygm63efa5" path="res://models/Puzzles/HappyFaceLock.glb" id="1_6ep5v"]
+[ext_resource type="Script" uid="uid://dyv7dqd15k855" path="res://happy_face_lock.gd" id="2_lose6"]
+
+[node name="HappyFaceLock2" instance=ExtResource("1_6ep5v")]
+script = ExtResource("2_lose6")
+
+[node name="LockHook" parent="." index="1"]
+transform = Transform3D(2.2399696e-07, -1.3748835, -0.29377085, -1.4059182, -2.2905316e-07, 0, -4.7861345e-08, 0.29377085, -1.3748835, 0, 3.604683, -1.2579125)
+
+[node name="HappyFaceLock" parent="." index="2"]
+transform = Transform3D(0, 0.40525618, 0, 1.3191729, 0, -0.11685117, -0.11685117, 0, -1.3191729, 0.7065826, 0, 0)

@@ -5,9 +5,10 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mq1x3"]
 
-[node name="LockedDoor" type="Area3D"]
+[node name="LockedDoor" type="Area3D" node_paths=PackedStringArray("door_mesh")]
 collision_layer = 2
 script = ExtResource("1_x4nd7")
+door_mesh = NodePath(".")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_mq1x3")

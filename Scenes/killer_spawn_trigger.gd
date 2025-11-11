@@ -1,44 +1,77 @@
 extends Area3D
 
-## Activates the killer when player enters this zone
-
 @export var killer_path: NodePath  # Path to the Killer node
-@export var one_time_trigger: bool = true  # Only trigger once
+@export var killer_spawn_position: Node3D  # Where to teleport killer
+@export var killer_patrol_waypoints: Array[Node3D] = []  # Patrol path
+@export var warning_sound: AudioStream  # Footsteps/creepy sound
+@export var vo_text: String = "What's that?! Someone's coming!\nI've got a bad feeling about this.\nI've got to hide."
+@export var vo_duration: float = 3.0
+@export var required_item: String = "Elevator Key"  # Must have this item to trigger
 
 var has_triggered: bool = false
+var interaction_ui = null
+var audio_player: AudioStreamPlayer = null
 
-
-func _ready() -> void:
+func _ready():
 	body_entered.connect(_on_body_entered)
-
-
-func _on_body_entered(body: Node3D) -> void:
-	if body.is_in_group("player"):
-		if has_triggered and one_time_trigger:
-			return  # Already triggered
-		
-		trigger_killer()
-
-
-func trigger_killer() -> void:
-	if not killer_path:
-		push_error("KillerSpawnTrigger: No killer path assigned!")
-		return
 	
-	var killer = get_node(killer_path)
+	# Create audio player
+	audio_player = AudioStreamPlayer.new()
+	add_child(audio_player)
+	if warning_sound:
+		audio_player.stream = warning_sound
+	
+	call_deferred("find_ui")
+
+func find_ui():
+	var ui_nodes = get_tree().get_nodes_in_group("ui")
+	if ui_nodes.size() > 0:
+		interaction_ui = ui_nodes[0]
+
+func _on_body_entered(body):
+	if body.is_in_group("player") and not has_triggered:
+		# Check if player has the elevator key
+		if body.has_method("get_held_item_name"):
+			var held_item = body.get_held_item_name()
+			if held_item == required_item:
+				has_triggered = true
+				trigger_killer_escape_sequence()
+			else:
+				print("EscapeSequence: Player doesn't have elevator key yet")
+
+func trigger_killer_escape_sequence():
+	print("EscapeSequence: TRIGGERED!")
+	
+	# Play warning sound
+	if audio_player and warning_sound:
+		audio_player.play()
+	
+	# Show VO
+	if interaction_ui and interaction_ui.has_method("show_prompt"):
+		interaction_ui.show_prompt(vo_text)
+		get_tree().create_timer(vo_duration).timeout.connect(func():
+			if interaction_ui:
+				interaction_ui.hide_prompt()
+		)
+	
+	# Get the killer
+	var killer = get_node(killer_path) if killer_path else null
 	if not killer:
-		push_error("KillerSpawnTrigger: Killer not found at path!")
+		push_error("EscapeSequence: No killer found!")
 		return
 	
+	# Teleport killer to spawn position
+	if killer_spawn_position:
+		killer.global_position = killer_spawn_position.global_position
+	
+	# Set patrol waypoints if available
+	if killer.has_method("set_patrol_waypoints") and killer_patrol_waypoints.size() > 0:
+		killer.set_patrol_waypoints(killer_patrol_waypoints)
+	
+	# Activate the killer
 	if killer.has_method("activate"):
 		killer.activate()
-		has_triggered = true
-		print("KillerSpawnTrigger: Killer activated!")
-		
-		# Optional: Add a dramatic sound effect here later
-		
-		if one_time_trigger:
-			# Disable the trigger after use
-			monitoring = false
-	else:
-		push_error("KillerSpawnTrigger: Killer doesn't have activate() method!")
+	
+	# Disable trigger
+	monitoring = false
+	print("EscapeSequence: Complete!")

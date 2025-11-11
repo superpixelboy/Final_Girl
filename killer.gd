@@ -64,10 +64,15 @@ func activate() -> void:
 	visible = true
 	set_physics_process(true)
 	
-	# Start patrolling or idle
-	current_state = State.PATROL if not patrol_points.is_empty() else State.IDLE
-	if current_state == State.PATROL and not patrol_points.is_empty():
+	# Start patrolling if we have points, otherwise idle
+	if not patrol_points.is_empty():
+		current_state = State.PATROL
+		current_patrol_index = 0
 		nav_agent.target_position = patrol_points[0]
+		print("Killer: Starting patrol with ", patrol_points.size(), " points")
+	else:
+		current_state = State.IDLE
+		print("Killer: Activated in IDLE (no patrol points yet)")
 		
 func _physics_process(delta: float) -> void:
 	match current_state:
@@ -83,6 +88,24 @@ func process_idle(_delta: float) -> void:
 	"""Stand still, watch for player"""
 	if anim_player and anim_player.current_animation != "Idle":
 		anim_player.play("Idle")
+
+func set_patrol_waypoints(waypoints: Array[Node3D]) -> void:
+	"""Set new patrol waypoints from an array of Node3D markers"""
+	patrol_points.clear()
+	
+	for waypoint in waypoints:
+		if waypoint:
+			patrol_points.append(waypoint.global_position)
+			print("Killer: Added waypoint at ", waypoint.global_position)
+	
+	print("Killer: Set ", patrol_points.size(), " patrol waypoints")
+	
+	# Start patrolling if we're not already chasing
+	if current_state != State.CHASE and not patrol_points.is_empty():
+		current_state = State.PATROL
+		current_patrol_index = 0
+		nav_agent.target_position = patrol_points[0]
+		print("Killer: Starting patrol from first waypoint")
 
 func load_patrol_points() -> void:
 	"""Load patrol waypoints from Marker3D children"""

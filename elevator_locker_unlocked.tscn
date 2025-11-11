@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://2mwn5hm2fi8e"]
+
+[ext_resource type="PackedScene" uid="uid://b0ix6rgdbmxlc" path="res://models/Hospital Asset Pack/models/SM_MedStorage_Unit_1.fbx" id="1_vos33"]
+[ext_resource type="PackedScene" uid="uid://c3oos8hgf042g" path="res://models/Hospital Asset Pack/models/SM_MedStorage_Unit_1_DL.fbx" id="2_0da4q"]
+[ext_resource type="PackedScene" uid="uid://cndir87ynde3p" path="res://models/Hospital Asset Pack/models/SM_MedStorage_Unit_1_DR.fbx" id="3_j4iks"]
+[ext_resource type="PackedScene" uid="uid://cj83so0co0hog" path="res://happy_face_unlocked.tscn" id="4_vos33"]
+
+[node name="ElevatorKeyLocker" type="Node3D"]
+
+[node name="ElevatorKeyLockerMesh" parent="." instance=ExtResource("1_vos33")]
+transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, 0, 1, 0)
+
+[node name="SM_MedStorage_Unit_1_DL" parent="." instance=ExtResource("2_0da4q")]
+transform = Transform3D(0.7824886, 0, -0.6226649, 0, 1, 0, 0.6226649, 0, 0.7824886, -0.35456288, 1.05, -0.6320139)
+
+[node name="SM_MedStorage_Unit_1_DR" parent="." instance=ExtResource("3_j4iks")]
+transform = Transform3D(-0.8620541, 0, -0.5068162, 0, 1, 0, 0.5068162, 0, -0.8620541, -0.35024393, 1.0475348, 0.6130475)
+
+[node name="HappyFaceLock2" parent="." instance=ExtResource("4_vos33")]
+transform = Transform3D(-0.00085198565, 0.014066836, -0.037435256, 0.039926834, 0.0024182473, 0, 0.0022631926, -0.03736678, -0.014092613, -0.5353913, 0.12142199, 0.25416982)
