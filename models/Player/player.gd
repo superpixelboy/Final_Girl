@@ -1,12 +1,13 @@
 extends CharacterBody3D
-## ULTRA DEBUG VERSION - Makes crowbar IMPOSSIBLE to miss
-## With giant size, bright debug cube, and tons of debug output
 
 @export_group("Movement")
 @export var walk_speed := 2.5
 @export var run_speed := 4.5
 @export var rotation_speed := 2.5
 @export var acceleration := 8.0
+
+@export_group("Controls")
+@export_enum("Tank", "Analog") var control_scheme := 0  # 0 = Tank, 1 = Analog
 
 @export_group("Animation")
 @export var turn_animation_threshold := 0.3
@@ -17,14 +18,20 @@ extends CharacterBody3D
 @export_group("Hiding")
 @export var interaction_range := 1.5
 
-@export_group("Item Holding - ULTRA DEBUG MODE")
-@export var hand_position := Vector3(0.0, 2.0, 5.0)  ## WAY OUT FRONT, HEAD HEIGHT
-@export var hand_item_scale := Vector3(5.0, 5.0, 5.0)  ## GIANT SIZE
-#@export var show_debug_cube := true  ## Show bright cube at hand position
+@export_group("Item Holding")
+@export var hand_position := Vector3(0.4, 1.2, 0.6)
+@export var hand_item_scale := Vector3(1.0, 1.0, 1.0)
 
 # Movement state
 var is_running := false
 var can_move := true
+var current_camera: Camera3D = null
+var previous_camera: Camera3D = null
+
+# Analog control direction locking (for smooth camera transitions)
+var locked_move_direction: Vector3 = Vector3.ZERO
+var locked_input_dir: Vector2 = Vector2.ZERO  # NEW: Track what input locked us
+var is_direction_locked: bool = false
 
 # Hiding state
 enum State { NORMAL, HIDING }
@@ -32,15 +39,12 @@ var current_state: State = State.NORMAL
 var current_hiding_spot: Area3D = null
 
 # UI
-var interaction_prompt_visible: bool = false
-var interaction_prompt_text: String = ""
-@onready var interaction_ui: CanvasLayer = null
+var interaction_ui: CanvasLayer = null
 
-# Item holding system
-var held_item_name: String = ""
-var held_item_node: Node3D = null
+# INVENTORY SYSTEM - Multiple items
+var inventory: Dictionary = {}  # {"item_name": node_reference}
+var active_item: String = ""  # Currently equipped item name
 var right_hand: Node3D = null
-var debug_cube: MeshInstance3D = null  # Visual indicator
 
 # Components
 @onready var _animation_player: AnimationPlayer = $AnimationPlayer
@@ -49,71 +53,111 @@ var debug_cube: MeshInstance3D = null  # Visual indicator
 
 
 func _ready() -> void:
-	print("\n========================================")
-	print("PLAYER ULTRA DEBUG MODE ACTIVATED")
-	print("========================================\n")
-	
-	# Activate starting camera if assigned
+	# Activate starting camera
 	if starting_camera:
 		starting_camera.current = true
+		current_camera = starting_camera
+		previous_camera = starting_camera
 	
 	# Start with idle animation
 	if _animation_player.has_animation("idle"):
 		_animation_player.play("idle")
 	
-	# Add to player group for detection
+	# Add to player group
 	add_to_group("player")
 	
-	# DEBUG: Check armature reference
-	if _armature:
-		print("DEBUG Player: Armature found: ", _armature.name)
-	else:
-		print("ERROR Player: Armature NOT found!")
+	# Find UI layer
+	call_deferred("find_ui")
 	
-	# Find UI layer for interaction prompts
-	var ui_paths = ["../UI", "/root/Floor5/UI", "../../UI"]
-	for path in ui_paths:
-		if has_node(path):
-			interaction_ui = get_node(path)
-			break
-	
-	if not interaction_ui:
-		push_warning("Player: No UI CanvasLayer found for interaction prompts")
-	
-	# CREATE RIGHT HAND POSITION
-	print("\n>>> CREATING RIGHT HAND POSITION <<<")
+	# Create right hand position for holding items
 	right_hand = Node3D.new()
 	right_hand.name = "RightHandPosition"
 	add_child(right_hand)
 	right_hand.position = hand_position
 	
-	print("✓ RightHandPosition created")
-	print("  Local position: ", right_hand.position)
-	print("  World position: ", right_hand.global_position)
+	print("Player: Inventory system ready")
+	print("Control Scheme: ", "Tank" if control_scheme == 0 else "Analog")
+
+
+func find_ui() -> void:
+	var ui_nodes = get_tree().get_nodes_in_group("ui")
+	if ui_nodes.size() > 0:
+		interaction_ui = ui_nodes[0]
+		update_inventory_ui()
+		return
 	
+	var ui_paths = ["../UI", "/root/Floor5/UI", "../../UI"]
+	for path in ui_paths:
+		if has_node(path):
+			interaction_ui = get_node(path)
+			update_inventory_ui()
+			break
 
-	
-	print("\n========================================\n")
 
-
-
+func _input(event: InputEvent) -> void:
+	# Toggle control scheme with F1
+	if event is InputEventKey and event.pressed and event.keycode == KEY_F1:
+		control_scheme = 1 - control_scheme  # Toggle between 0 and 1
+		print("Control Scheme switched to: ", "Tank" if control_scheme == 0 else "Analog")
+		
+		# Reset direction lock when switching schemes
+		is_direction_locked = false
+		locked_move_direction = Vector3.ZERO
+		locked_input_dir = Vector2.ZERO
+		
+		# Show notification to player
+		if interaction_ui and interaction_ui.has_method("show_notification"):
+			var scheme_name = "Tank Controls" if control_scheme == 0 else "Analog Controls"
+			interaction_ui.show_notification(scheme_name)
 
 
 func _physics_process(delta: float) -> void:
+	# Update current camera reference
+	update_current_camera()
+	
+	# Handle inventory switching
+	if current_state == State.NORMAL and can_move:
+		if Input.is_action_just_pressed("next_item"):
+			cycle_inventory(1)
+		elif Input.is_action_just_pressed("last_item"):
+			cycle_inventory(-1)
+	
 	# Different behavior based on state
 	match current_state:
 		State.NORMAL:
-			process_normal_movement(delta)
+			if control_scheme == 0:
+				process_tank_movement(delta)
+			else:
+				process_analog_movement(delta)
 		State.HIDING:
 			process_hiding_state(delta)
 
 
-func process_normal_movement(delta: float) -> void:
-	"""Normal tank control movement"""
+func update_current_camera() -> void:
+	"""Track the currently active camera for analog controls"""
+	var viewport = get_viewport()
+	if viewport and viewport.get_camera_3d():
+		var new_camera = viewport.get_camera_3d()
+		
+		# Detect camera change
+		if new_camera != current_camera and control_scheme == 1:
+			previous_camera = current_camera
+			current_camera = new_camera
+			
+			# If we're moving when camera changes, lock the direction
+			if locked_move_direction.length() > 0.1:
+				is_direction_locked = true
+				print("Camera changed - direction locked to world space")
+		else:
+			current_camera = new_camera
+
+
+func process_tank_movement(delta: float) -> void:
+	"""Original tank control movement"""
 	if not can_move:
 		return
 	
-	# Check for interaction input FIRST
+	# Check for interaction
 	if Input.is_action_just_pressed("interact"):
 		try_interact()
 	
@@ -121,38 +165,128 @@ func process_normal_movement(delta: float) -> void:
 	var rotation_input := Input.get_axis("tank_rotate_left", "tank_rotate_right")
 	var move_input := Input.get_axis("tank_forward", "tank_back")
 	
-	# HOLD TO RUN (not toggle)
+	# Hold to run
 	is_running = Input.is_action_pressed("run_toggle")
 	
-	# TANK CONTROL ROTATION
+	# Tank control rotation
 	if rotation_input != 0:
 		rotate_y(-rotation_input * rotation_speed * delta)
 	
-	# TANK CONTROL MOVEMENT
+	# Tank control movement
 	var current_speed := run_speed if is_running else walk_speed
 	var move_direction := -global_transform.basis.z * move_input
 	move_direction.y = 0.0
 	
-	# Direct velocity
 	velocity.x = move_direction.x * current_speed
 	velocity.z = move_direction.z * current_speed
 	
-	# Apply gravity
+	# Gravity
 	if not is_on_floor():
 		velocity.y -= 20.0 * delta
 	
 	move_and_slide()
-	
-	# Update animations
 	_update_animation(move_input, rotation_input)
 	
-	# Character model faces movement direction
 	if move_input != 0:
 		_skin.rotation.y = 0
 
 
+func process_analog_movement(delta: float) -> void:
+	"""Modern analog control movement (camera-relative) with direction locking"""
+	if not can_move:
+		return
+	
+	# Check for interaction
+	if Input.is_action_just_pressed("interact"):
+		try_interact()
+	
+	# Get input (reuse tank controls for now)
+	var input_dir = Vector2(
+		Input.get_action_strength("tank_rotate_right") - Input.get_action_strength("tank_rotate_left"),
+		Input.get_action_strength("tank_back") - Input.get_action_strength("tank_forward")
+	)
+	
+	# NORMALIZE INPUT - prevent diagonal movement from being faster
+	if input_dir.length() > 1.0:
+		input_dir = input_dir.normalized()
+	
+	# Hold to run
+	is_running = Input.is_action_pressed("run_toggle")
+	
+	# ANALOG MODE: Reduce speed by half for better control
+	var current_speed := (run_speed if is_running else walk_speed) * 0.5
+	
+	# Check if input was released - unlock direction
+	if input_dir.length() < 0.1:
+		if is_direction_locked:
+			print("Input released - direction unlocked")
+		is_direction_locked = false
+		locked_move_direction = Vector3.ZERO
+		locked_input_dir = Vector2.ZERO
+		velocity.x = 0
+		velocity.z = 0
+		_update_animation(0, 0)
+	else:
+		# NEW: Check if input direction changed while locked (player pressed new button)
+		if is_direction_locked:
+			var input_change = (input_dir - locked_input_dir).length()
+			if input_change > 0.3:  # Threshold for detecting new input
+				print("Input changed while locked - unlocking to use new direction")
+				is_direction_locked = false
+		
+		# Player is giving input
+		var move_dir: Vector3
+		
+		if is_direction_locked:
+			# Use the locked world-space direction
+			move_dir = locked_move_direction.normalized()
+		else:
+			# Calculate new direction from camera
+			var cam_forward: Vector3
+			var cam_right: Vector3
+			
+			if current_camera:
+				cam_forward = -current_camera.global_transform.basis.z
+				cam_right = current_camera.global_transform.basis.x
+			else:
+				# Fallback to world space
+				cam_forward = Vector3.FORWARD
+				cam_right = Vector3.RIGHT
+			
+			# Project to XZ plane (ignore Y)
+			cam_forward.y = 0
+			cam_right.y = 0
+			cam_forward = cam_forward.normalized()
+			cam_right = cam_right.normalized()
+			
+			# Calculate movement direction relative to camera
+			move_dir = (cam_right * input_dir.x + cam_forward * -input_dir.y).normalized()
+			
+			# Store this as our locked direction (in case camera changes)
+			locked_move_direction = move_dir
+			locked_input_dir = input_dir  # Store the input that created this direction
+		
+		# Smoothly rotate character to face movement direction
+		if move_dir.length() > 0:
+			var target_rotation = atan2(move_dir.x, move_dir.z)
+			rotation.y = lerp_angle(rotation.y, target_rotation, 10.0 * delta)
+		
+		# Move in the direction
+		velocity.x = move_dir.x * current_speed
+		velocity.z = move_dir.z * current_speed
+		
+		# Animation - use total input magnitude so ANY direction triggers walk
+		_update_animation(input_dir.length(), 0)
+		_skin.rotation.y = 0
+	
+	# Gravity
+	if not is_on_floor():
+		velocity.y -= 20.0 * delta
+	
+	move_and_slide()
+
+
 func process_hiding_state(_delta: float) -> void:
-	"""Player is hiding - limited controls"""
 	if Input.is_action_just_pressed("interact"):
 		if current_hiding_spot and current_hiding_spot.has_method("exit_hiding"):
 			current_hiding_spot.exit_hiding()
@@ -176,7 +310,6 @@ func _update_animation(move_input: float, rotation_input: float) -> void:
 				if _animation_player.current_animation != "Animations/walk":
 					_animation_player.play("Animations/walk")
 					_animation_player.speed_scale = 1.0
-	
 	elif abs(rotation_input) > turn_animation_threshold:
 		if rotation_input < 0:
 			if _animation_player.has_animation("Animations/turn_left"):
@@ -186,7 +319,6 @@ func _update_animation(move_input: float, rotation_input: float) -> void:
 			if _animation_player.has_animation("Animations/turn_right"):
 				if _animation_player.current_animation != "Animations/turn_right":
 					_animation_player.play("Animations/turn_right")
-	
 	else:
 		if _animation_player.has_animation("idle"):
 			if _animation_player.current_animation != "idle":
@@ -218,13 +350,17 @@ func try_interact() -> void:
 		var area = result["collider"]
 		if area is Area3D and area.has_method("try_hide_player"):
 			if area.try_hide_player():
-				print("Player: Successfully entered hiding spot")
 				return
 
 
 func enter_hiding_state(hiding_spot: Area3D) -> void:
 	current_state = State.HIDING
 	current_hiding_spot = hiding_spot
+	
+	# Reset direction lock when hiding
+	is_direction_locked = false
+	locked_move_direction = Vector3.ZERO
+	locked_input_dir = Vector2.ZERO
 	
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(1, false)
@@ -265,88 +401,125 @@ func set_interaction_prompt(show: bool, text: String = "") -> void:
 
 
 # ============================================================================
-# ITEM HOLDING SYSTEM - ULTRA DEBUG VERSION
+# INVENTORY SYSTEM
 # ============================================================================
 
-func equip_item(item_name_param: String, item_node: Node3D) -> void:
-	print("\n========================================")
-	print(">>> EQUIPPING ITEM <<<")
-	print("========================================")
-	print("Item name: ", item_name_param)
-	print("Item node: ", item_node.name if item_node else "NULL")
-	print("Item type: ", item_node.get_class() if item_node else "NULL")
+func add_to_inventory(item_name_param: String, item_node: Node3D) -> void:
+	"""Add an item to inventory without replacing existing items"""
+	print("\n=== ADDING TO INVENTORY ===")
+	print("Item: ", item_name_param)
 	
-	if not right_hand:
-		print("❌ ERROR: No right_hand node!")
-		return
-	
-	print("✓ Right hand exists")
-	print("  Hand local pos: ", right_hand.position)
-	print("  Hand world pos: ", right_hand.global_position)
-	
-	# Store references
-	held_item_name = item_name_param
-	held_item_node = item_node
+	# Store in inventory dictionary
+	inventory[item_name_param] = item_node
 	
 	# Remove from world
 	if item_node.get_parent():
-		print("✓ Removing item from parent: ", item_node.get_parent().name)
 		item_node.get_parent().remove_child(item_node)
 	
-	# Add to hand
-	print("✓ Adding item to right hand...")
+	# Add to hand (invisible for now)
 	right_hand.add_child(item_node)
-	
-	# Reset transform
 	item_node.position = Vector3.ZERO
 	item_node.rotation = Vector3.ZERO
 	item_node.scale = hand_item_scale
-	item_node.visible = true
+	item_node.visible = false
 	
-	print("✓ Item equipped!")
-	print("  Item local pos: ", item_node.position)
-	print("  Item world pos: ", item_node.global_position)
-	print("  Item scale: ", item_node.scale)
-	print("  Item visible: ", item_node.visible)
-	print("  Item parent: ", item_node.get_parent().name if item_node.get_parent() else "NULL")
+	# If this is our first item OR we don't have an active item, equip it
+	if inventory.size() == 1 or active_item == "":
+		switch_to_item(item_name_param)
 	
-	# List all meshes in the item
-	print("\n  Item children:")
-	for child in item_node.get_children():
-		print("    - ", child.name, " (", child.get_class(), ") visible: ", child.visible)
+	update_inventory_ui()
+	print("Inventory now contains: ", inventory.keys())
+
+
+func switch_to_item(item_name_param: String) -> void:
+	"""Switch the actively displayed item"""
+	if not inventory.has(item_name_param):
+		return
 	
-	print("========================================\n")
+	# Hide current active item
+	if active_item != "" and inventory.has(active_item):
+		inventory[active_item].visible = false
 	
-	# Hide debug cube now that we have an item
-	if debug_cube:
-		debug_cube.visible = false
+	# Show new active item
+	active_item = item_name_param
+	inventory[active_item].visible = true
+	
+	print("Active item: ", active_item)
+	update_inventory_ui()
+
+
+func cycle_inventory(direction: int) -> void:
+	"""Cycle through inventory items (1 = next, -1 = previous)"""
+	if inventory.size() <= 1:
+		return
+	
+	var item_names = inventory.keys()
+	var current_index = item_names.find(active_item)
+	
+	if current_index == -1:
+		current_index = 0
+	else:
+		current_index = (current_index + direction) % item_names.size()
+	
+	switch_to_item(item_names[current_index])
+
+
+func remove_from_inventory(item_name_param: String) -> void:
+	"""Remove an item from inventory (e.g., after using it)"""
+	if not inventory.has(item_name_param):
+		return
+	
+	print("Removing from inventory: ", item_name_param)
+	
+	# Free the node
+	if inventory[item_name_param]:
+		inventory[item_name_param].queue_free()
+	
+	# Remove from dictionary
+	inventory.erase(item_name_param)
+	
+	# If we just removed the active item, switch to another
+	if active_item == item_name_param:
+		if inventory.size() > 0:
+			switch_to_item(inventory.keys()[0])
+		else:
+			active_item = ""
+	
+	update_inventory_ui()
+
+
+func has_item(item_name_param: String) -> bool:
+	"""Check if player has a specific item"""
+	return inventory.has(item_name_param)
+
+
+func get_active_item() -> String:
+	"""Get the name of the currently equipped item"""
+	return active_item
+
+
+func update_inventory_ui() -> void:
+	"""Update the UI to show current inventory"""
+	if not interaction_ui or not interaction_ui.has_method("update_inventory"):
+		return
+	
+	interaction_ui.update_inventory(inventory.keys(), active_item)
+
+
+# Legacy compatibility - some scripts might still call this
+func equip_item(item_name_param: String, item_node: Node3D) -> void:
+	add_to_inventory(item_name_param, item_node)
 
 
 func unequip_item() -> void:
-	if held_item_node:
-		held_item_node.queue_free()
-	
-	held_item_name = ""
-	held_item_node = null
-	
-
-
-
-func has_item() -> bool:
-	return held_item_name != ""
+	"""Legacy function - now removes active item"""
+	if active_item != "":
+		remove_from_inventory(active_item)
 
 
 func get_held_item_name() -> String:
-	return held_item_name
-
-
-func use_held_item() -> bool:
-	if held_item_node and held_item_node.has_method("use_item"):
-		var success = held_item_node.use_item()
-		if success:
-			unequip_item()
-			return true
-	return false
+	"""Legacy function - returns active item"""
+	return active_item
 
 
 # ============================================================================
@@ -356,6 +529,12 @@ func use_held_item() -> bool:
 func lock_movement() -> void:
 	can_move = false
 	velocity = Vector3.ZERO
+	
+	# Reset direction lock
+	is_direction_locked = false
+	locked_move_direction = Vector3.ZERO
+	locked_input_dir = Vector2.ZERO
+	
 	if _animation_player.has_animation("idle"):
 		_animation_player.play("idle")
 

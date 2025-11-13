@@ -1,4 +1,4 @@
-[gd_scene load_steps=121 format=3 uid="uid://bi2bgol3b2cxr"]
+[gd_scene load_steps=124 format=3 uid="uid://bi2bgol3b2cxr"]
 
 [ext_resource type="PackedScene" uid="uid://bvexokqfbl8hl" path="res://models/Hospital Asset Pack/models/SM_GurneyBed.fbx" id="1_1eqqd"]
 [ext_resource type="PackedScene" uid="uid://cip20uy2534vs" path="res://models/Hospital Asset Pack/models/SM_BlisterPack.fbx" id="2_3la4u"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://q7jf5ujwdpui" path="res://sm_patient_room_wall_Happy.tscn" id="9_aauvr"]
 [ext_resource type="Shader" uid="uid://c4tk78q0dssug" path="res://Scenes/post_processing.gdshader" id="10_jp0me"]
 [ext_resource type="PackedScene" uid="uid://1hehtp57b6ic" path="res://models/Hospital Asset Pack/models/SM_PatientRoom_Floor.fbx" id="11_12og3"]
+[ext_resource type="PackedScene" uid="uid://3ojpq0ygnj0a" path="res://models/Hospital Asset Pack/models/SM_OverBedTable.fbx" id="11_dc5iw"]
 [ext_resource type="PackedScene" uid="uid://boarx8826mckh" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_1.fbx" id="12_aauvr"]
 [ext_resource type="PackedScene" uid="uid://bfid1xcb6cvh8" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_2.fbx" id="13_aib12"]
 [ext_resource type="PackedScene" uid="uid://bwoj40v5hu3fg" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_3.fbx" id="14_3wwpe"]
@@ -103,10 +104,16 @@ vertices = PackedVector3Array(-20.52837, 0.38993457, -5.510758, -20.52837, 0.389
 polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1eqqd"]
-size = Vector3(1.1987305, 1, 2.7521973)
+size = Vector3(0.6368408, 1, 1.7254028)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3la4u"]
-size = Vector3(1.034668, 1, 1.0197144)
+size = Vector3(3.204712, 1, 1.2611618)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_suf26"]
+size = Vector3(7.6125793, 1, 1.2611618)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_unptd"]
+size = Vector3(2.7844276, 2.755371, 2.0129051)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gjosa"]
 size = Vector3(1.75, 1, 1.7495728)
@@ -190,15 +197,17 @@ size = Vector3(1.3457031, 1.4003906, 1.0490723)
 
 [node name="ScreenQuad" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4230129, 0.27156937, 0)
+visible = false
 material_override = SubResource("ShaderMaterial_piipy")
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_bc7nb")
 
 [node name="Player" parent="." instance=ExtResource("20_6wtli")]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -5.267411, 0.25, -1.358675)
+transform = Transform3D(-0.022028854, 0, 0.39939296, 0, 0.4, 0, -0.39939296, 0, -0.022028854, -4.584855, 0.1977539, 1.6206036)
 walk_speed = 4.5
 run_speed = 6.5
-rotation_speed = 4.0
+rotation_speed = 6.0
+control_scheme = 1
 
 [node name="MrNiceGuy" type="Node3D" parent="."]
 
@@ -665,6 +674,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Press E"
 
+[node name="InventoryLabel" type="Label" parent="UI Elements/UI"]
+offset_left = 1015.0
+offset_top = 24.0
+offset_right = 1119.0
+offset_bottom = 84.0
+
 [node name="FixedCameras" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
 
@@ -676,7 +691,7 @@ script = ExtResource("21_oildv")
 camera = NodePath("../../Cameras/CamPatientRoom1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZonePatientRoom1"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1.7019055, -1.5, -4.7032957)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -2.5447423, -1.5, -3.163104)
 shape = SubResource("BoxShape3D_1eqqd")
 
 [node name="ZonePatientRoom2" type="Area3D" parent="FixedCameras/CameraTriggers" node_paths=PackedStringArray("camera")]
@@ -685,16 +700,24 @@ script = ExtResource("21_oildv")
 camera = NodePath("../../Cameras/CamPatientRoom2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZonePatientRoom2"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1.0270152, 0.25, -4.0927496)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 1.6157155, 0.25, -2.923129)
 shape = SubResource("BoxShape3D_3la4u")
 
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZonePatientRoom2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.646349, 1, -5.580599)
+shape = SubResource("BoxShape3D_suf26")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZonePatientRoom2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.105236, 0.12231445, 0.092775345)
+shape = SubResource("BoxShape3D_unptd")
+
 [node name="ZonePatientRoom3" type="Area3D" parent="FixedCameras/CameraTriggers" node_paths=PackedStringArray("camera")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -1.5, -0.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1385653, -1.5, -9.025436)
 script = ExtResource("21_oildv")
 camera = NodePath("../../Cameras/CamPatientRoom3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZonePatientRoom3"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -0.60253143, 0.25, -2.8666565)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 2.0806007, 0.25, -1.2468998)
 shape = SubResource("BoxShape3D_gjosa")
 
 [node name="ZoneHall1" type="Area3D" parent="FixedCameras/CameraTriggers" node_paths=PackedStringArray("camera")]
@@ -871,14 +894,14 @@ shape = SubResource("BoxShape3D_3la4u")
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.25, 3, 0)
 
 [node name="CamPatientRoom1" type="Camera3D" parent="FixedCameras/Cameras" groups=["camera"]]
-transform = Transform3D(0.99944264, -0.01889331, 0.027520843, -0.0032140447, 0.7661308, 0.64267653, -0.033226855, -0.6424069, 0.7656431, -2.409559, -0.057747364, 0.75)
+transform = Transform3D(-4.056237e-08, -0.26597676, 0.9639795, -2.3252422e-08, 0.9639795, 0.26597676, -1, -1.1626212e-08, -4.5285894e-08, -0.8751047, -1.0898519, -4.1862183)
 current = true
 
 [node name="CamPatientRoom2" type="Camera3D" parent="FixedCameras/Cameras" groups=["camera"]]
-transform = Transform3D(0.1471636, 0.14272791, -0.9787603, -0.0449051, 0.98947793, 0.13753903, 0.9880923, 0.02371059, 0.15202436, -0.040647462, -1.1022205, -7.1773143)
+transform = Transform3D(0.9991708, 0.02952884, -0.028031928, -0.012389369, 0.87634146, 0.48153123, 0.038784593, -0.48078462, 0.8759806, -1.1933285, -0.90239143, -2.3707857)
 
 [node name="CamPatientRoom3" type="Camera3D" parent="FixedCameras/Cameras" groups=["camera"]]
-transform = Transform3D(1, 1.5361515e-08, -1.318129e-07, -1.53615e-08, 1, 1.0430813e-07, 1.318129e-07, -1.0430813e-07, 1, 2.7500007, -1.75, 0.25)
+transform = Transform3D(0.483677, 0.3949583, -0.7810663, -0.010463162, 0.89494115, 0.44606155, 0.875184, -0.20757729, 0.43699497, 0.9676253, -1.1038818, -6.282755)
 
 [node name="CamHall1" type="Camera3D" parent="FixedCameras/Cameras" groups=["camera"]]
 transform = Transform3D(1, 5.963044e-08, -1.4878401e-07, -5.963042e-08, 1, 8.9406974e-08, 1.4878401e-07, -8.940697e-08, 1, -5.2500014, -1.7499971, 2.3784475)
@@ -1081,35 +1104,32 @@ size = Vector3(5, 1, 1.75)
 [node name="StartingRoom" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 
+[node name="SM_OverBedTable" parent="StartingRoom" instance=ExtResource("11_dc5iw")]
+transform = Transform3D(0.6263998, 0, -0.7795021, 0, 1, 0, 0.7795021, 0, 0.6263998, -5.212964, 0.2607327, -0.79227686)
+
 [node name="SM_GurneyBed" parent="StartingRoom" instance=ExtResource("1_1eqqd")]
-transform = Transform3D(0.7901123, 0, 0.6129621, 0, 1, 0, -0.6129621, 0, 0.7901123, -4.9675303, 0.38420832, 2.7481904)
+transform = Transform3D(-0.37541562, 0, -0.9268566, 0, 1, 0, 0.9268566, 0, -0.37541562, -4.6645823, 0.38420832, 2.9082708)
 
 [node name="SM_BlisterPack" parent="StartingRoom" instance=ExtResource("2_3la4u")]
-transform = Transform3D(0.8304987, 0, -0.5570206, 0, 1, 0, 0.5570206, 0, 0.8304987, -4.317028, 0.81822306, -2.859993)
+transform = Transform3D(0.55702055, 0, 0.8304987, 0, 1, 0, -0.8304987, 0, 0.55702055, -4.92027, 0.81822306, 1.9535091)
 
 [node name="SM_WheelChair" parent="StartingRoom" instance=ExtResource("3_x7bi6")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -4.420933, 0.5614399, 0.10138011)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 1.7362328, 0.5614399, 1.1924751)
 
 [node name="SM_Bedframe" parent="StartingRoom" instance=ExtResource("4_ro5ai")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.1020637, 0.58174384, -2.6780503)
-
-[node name="SM_Bedframe2" parent="StartingRoom/SM_Bedframe" instance=ExtResource("4_ro5ai")]
-transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -0.4635787, -0.0031944513, -4.5051217)
+transform = Transform3D(0.9931686, 0, 0.11668807, 0, 1, 0, -0.11668807, 0, 0.9931686, -4.7383275, 0.58174384, 1.5520289)
 
 [node name="SM_BedCover" parent="StartingRoom/SM_Bedframe" instance=ExtResource("5_sy202")]
-transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -0.44767237, 0.14988244, -4.49645)
-
-[node name="SM_BedCover" parent="StartingRoom" instance=ExtResource("5_sy202")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4.0933924, 0.7348207, -2.6939566)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.015906334, 0.15307689, -0.008671284)
 
 [node name="SM_CurtainRail" parent="StartingRoom" instance=ExtResource("6_3ngcx")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.38653493, 2.8075025, -2.0384686)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.098746, 2.8075025, -1.976984)
 
 [node name="SM_BedCurtain" parent="StartingRoom" instance=ExtResource("7_vavsx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1096365, 1.5464447, -4.12539)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.56317, 1.5464447, -1.2538824)
 
 [node name="SM_BedCurtain2" parent="StartingRoom" instance=ExtResource("7_vavsx")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.1973352, 1.3781753, -3.9152503)
+transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -5.2003355, 1.3781753, -1.1661835)
 
 [node name="SM_PatientRoom_Wall_3" parent="StartingRoom" instance=ExtResource("9_aauvr")]
 transform = Transform3D(1, 0, -1.0133184e-07, 0, 1, 0, 1.0133184e-07, 0, 1, -5.9, 1.425, 1.8499999)
@@ -1140,6 +1160,15 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 3.94
 
 [node name="SM_PatientRoom_Doorway" parent="StartingRoom" instance=ExtResource("19_q34bx")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0.06270342, 0.9980322, 2.7408538e-09, -0.9980322, 0.06270342, -4.3625374e-08, -1, 1.25, 3.75)
+
+[node name="SM_Bedframe2" parent="StartingRoom" instance=ExtResource("4_ro5ai")]
+transform = Transform3D(-1, 0, 8.742277e-08, 0, 1, 0, -8.742277e-08, 0, -1, -4.8962727, 0.5785494, -1.8696654)
+
+[node name="SM_BedCover" parent="StartingRoom/SM_Bedframe2" instance=ExtResource("5_sy202")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.015906334, 0.15307689, -0.008671761)
+
+[node name="SM_Plant_Dead" parent="StartingRoom" instance=ExtResource("53_7oy6k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.653149, 0.87196374, 3.3967168)
 
 [node name="Hallway" type="Node3D" parent="."]
 
@@ -1515,7 +1544,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.18715572)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.125)
 
 [node name="SM_FilingCabinet3" parent="Hallway" instance=ExtResource("33_nceqk")]
-transform = Transform3D(-2.0068839, 0, 1.3348874e-07, 0, 1.3669317, 0, -1.754473e-07, 0, -1.5269333, -17.341427, 0.873852, 0.5062485)
+transform = Transform3D(-2.0068839, 0, 1.3348874e-07, 0, 1.3669317, 0, -1.754473e-07, 0, -1.5269333, -18.269447, 0.873852, 0.5062485)
 
 [node name="SM_FilingCabinet_Draw" parent="Hallway/SM_FilingCabinet3" instance=ExtResource("34_i1pty")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -0.125)
@@ -1641,7 +1670,7 @@ transform = Transform3D(-0.9995879, 1.8203716e-11, -0.028706763, 0.0031331833, 0
 fov = 60.0
 
 [node name="CrowbarPickup" parent="Interactables" instance=ExtResource("28_7nxgd")]
-transform = Transform3D(0.7104925, 0.7037048, 0, -0.6249351, 0.63096297, -0.45971936, -0.3235067, 0.32662717, 0.88806427, 0.27255487, 0.34922808, -2.597146)
+transform = Transform3D(-0.4540229, -0.51979566, -0.7236542, 0.7371642, 0.23704809, -0.63276905, 0.5004515, -0.8207437, 0.2755496, -6.618833, 0.685776, -2.549119)
 
 [node name="HappyFaceLockZone" type="Area3D" parent="Interactables"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.75, 0, -5)
@@ -1673,7 +1702,7 @@ shape = SubResource("BoxShape3D_508tr")
 transform = Transform3D(1.6127663, 0, 1.6804703, 0, 2.5852623, 0, -1.9483222, 0, 1.391046, -0.13349152, 0.25844276, 1.7983077)
 
 [node name="PatientMonitor" type="Area3D" parent="Interactables" node_paths=PackedStringArray("monitor_node", "examine_camera")]
-transform = Transform3D(0.13692592, 0, 0.9905813, 0, 1, 0, -0.9905813, 0, 0.13692592, -3.479155, 0.45892668, -2.3939846)
+transform = Transform3D(-0.9232505, 0, 0.3841987, 0, 1, 0, -0.3841987, 0, -0.9232505, -6.0760217, 0.45892668, -0.1292553)
 script = ExtResource("38_508tr")
 monitor_node = NodePath("SM_PatientMonitor")
 blank_texture = ExtResource("39_8wl2l")

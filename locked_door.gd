@@ -71,8 +71,9 @@ func _on_body_exited(body):
 		hide_interaction_prompt()
 
 func try_open_door():
+	# NEW: Use has_item() with parameter
 	if player_ref and player_ref.has_method("has_item"):
-		if player_ref.has_item() and player_ref.get_held_item_name() == "Crowbar":
+		if player_ref.has_item("Crowbar"):
 			open_door_with_crowbar()
 		else:
 			door_locked_response()
@@ -101,14 +102,14 @@ func open_door_with_crowbar():
 	# 2. Fade to black
 	await fade_to_black()
 	
-	# 3. HIDE door mesh while screen is black (don't delete yet!)
+	# 3. Hide door mesh while screen is black
 	if door_mesh:
 		door_mesh.visible = false
 		print("Door: Door hidden")
 	
-	# 4. Remove crowbar
-	if player_ref and player_ref.has_method("unequip_item"):
-		player_ref.unequip_item()
+	# 4. Remove crowbar from inventory
+	if player_ref and player_ref.has_method("remove_from_inventory"):
+		player_ref.remove_from_inventory("Crowbar")
 	
 	# 5. Wait a moment
 	await get_tree().create_timer(0.5).timeout
@@ -116,13 +117,13 @@ func open_door_with_crowbar():
 	# 6. Fade back in
 	await fade_from_black()
 	
-	# 7. Unlock player - THEY CAN MOVE NOW
+	# 7. Unlock player
 	if player_ref and player_ref.has_method("unlock_movement"):
 		player_ref.unlock_movement()
 	
-	print("Door: Player has control back, now cleaning up...")
+	print("Door: Player has control back")
 	
-	# 8. NOW delete everything (player already has control)
+	# 8. Clean up
 	queue_free()
 
 func fade_to_black() -> void:
