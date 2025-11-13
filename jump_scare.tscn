@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://b1dgsfuao1j6x"]
+
+[ext_resource type="Script" uid="uid://cn8n3wu1envo0" path="res://jump_scare.gd" id="1_3251x"]
+[ext_resource type="Texture2D" uid="uid://bmykj3si6hbf4" path="res://Images/JumpScareFrames1.png" id="2_xobg2"]
+[ext_resource type="Texture2D" uid="uid://de4gtdt8hs34u" path="res://Images/JumpScareFrames3.png" id="3_jwcxt"]
+[ext_resource type="AudioStream" uid="uid://defgxhu3x3k6m" path="res://Sounds/JumpScareSound.mp3" id="4_qntot"]
+[ext_resource type="AudioStream" uid="uid://diktb7xpfm2f5" path="res://Sounds/splatter_test.mp3" id="5_xobg2"]
+
+[node name="JumpScare" type="CanvasLayer"]
+script = ExtResource("1_3251x")
+frame_textures = Array[Texture2D]([ExtResource("2_xobg2"), ExtResource("2_xobg2"), ExtResource("3_jwcxt")])
+shake_sound = ExtResource("4_qntot")
+
+[node name="BlackBackground" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ScareImage" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xobg2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ShakePlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_qntot")
+
+[node name="SplatterPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_xobg2")

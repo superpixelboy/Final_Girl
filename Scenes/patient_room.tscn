@@ -1,11 +1,13 @@
-[gd_scene load_steps=124 format=3 uid="uid://bi2bgol3b2cxr"]
+[gd_scene load_steps=131 format=3 uid="uid://bi2bgol3b2cxr"]
 
 [ext_resource type="PackedScene" uid="uid://bvexokqfbl8hl" path="res://models/Hospital Asset Pack/models/SM_GurneyBed.fbx" id="1_1eqqd"]
 [ext_resource type="PackedScene" uid="uid://cip20uy2534vs" path="res://models/Hospital Asset Pack/models/SM_BlisterPack.fbx" id="2_3la4u"]
 [ext_resource type="PackedScene" uid="uid://cl1csdxqy1kwn" path="res://models/Hospital Asset Pack/models/SM_WheelChair.fbx" id="3_x7bi6"]
 [ext_resource type="PackedScene" uid="uid://kefi0sale7dw" path="res://models/Hospital Asset Pack/models/SM_Bedframe.fbx" id="4_ro5ai"]
 [ext_resource type="PackedScene" uid="uid://d0r6ang2la4gs" path="res://models/Hospital Asset Pack/models/SM_BedCover.fbx" id="5_sy202"]
+[ext_resource type="AudioStream" uid="uid://cypoebtsoxaku" path="res://Sounds/KillerHasEntered.mp3" id="5_unptd"]
 [ext_resource type="PackedScene" uid="uid://cjw5jedsiwtsj" path="res://models/Hospital Asset Pack/models/SM_CurtainRail.fbx" id="6_3ngcx"]
+[ext_resource type="AudioStream" uid="uid://cow1emh8kxbs7" path="res://Sounds/wood-crack-4-88688.mp3" id="6_88gt0"]
 [ext_resource type="PackedScene" uid="uid://dxpml3t0licbc" path="res://models/Hospital Asset Pack/models/SM_BedCurtain.fbx" id="7_vavsx"]
 [ext_resource type="PackedScene" uid="uid://cji3ox3yi0gs6" path="res://models/Hospital Asset Pack/models/SM_PatientRoom_Wall_1.fbx" id="8_7nxgd"]
 [ext_resource type="PackedScene" uid="uid://ba5qvrxiogrtu" path="res://models/Hospital Asset Pack/models/SM_Patient_Room_Window_Wall.fbx" id="9_1uj71"]
@@ -87,6 +89,11 @@
 [ext_resource type="PackedScene" uid="uid://bybmhbexye4q3" path="res://models/Hospital Asset Pack/models/SM_StationaryPot.fbx" id="76_dakvv"]
 [ext_resource type="PackedScene" uid="uid://bpe2067ut1okg" path="res://models/Hospital Asset Pack/models/SM_WoodenBoard.fbx" id="77_g1xit"]
 [ext_resource type="PackedScene" uid="uid://bsna5a70d736k" path="res://models/Hospital Asset Pack/models/SM_Laundry.fbx" id="78_dc5iw"]
+[ext_resource type="PackedScene" uid="uid://b1dgsfuao1j6x" path="res://jump_scare.tscn" id="88_k6bo5"]
+[ext_resource type="Texture2D" uid="uid://bmykj3si6hbf4" path="res://Images/JumpScareFrames1.png" id="89_8kb70"]
+[ext_resource type="Texture2D" uid="uid://dylci457negbr" path="res://Images/JumpScareFrames2.png" id="90_gjosa"]
+[ext_resource type="Texture2D" uid="uid://de4gtdt8hs34u" path="res://Images/JumpScareFrames3.png" id="91_suf26"]
+[ext_resource type="AudioStream" uid="uid://diktb7xpfm2f5" path="res://Sounds/splatter_test.mp3" id="92_gjosa"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_piipy"]
 render_priority = 0
@@ -237,6 +244,8 @@ script = ExtResource("26_3ngcx")
 killer_path = NodePath("../Killer")
 killer_spawn_position = NodePath("../Killer")
 killer_patrol_waypoints = [NodePath("../KillerPatrolPoints/Point1"), NodePath("../KillerPatrolPoints/Point2"), NodePath("../KillerPatrolPoints/Point3"), NodePath("../KillerPatrolPoints/Point4")]
+warning_sound = ExtResource("5_unptd")
+killer_appear_sound = ExtResource("6_88gt0")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MrNiceGuy/KillerSpawnTrigger"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, -3.6867905)
@@ -1879,3 +1888,7 @@ transform = Transform3D(0.5753622, 0, -0.81789875, 0, 1, 0, 0.81789875, 0, 0.575
 
 [node name="SM_PeddleBin2" parent="." instance=ExtResource("62_508tr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 61.96473, 0.6861669, -1.2851989)
+
+[node name="JumpScare" parent="." groups=["jump_scare"] instance=ExtResource("88_k6bo5")]
+frame_textures = Array[Texture2D]([ExtResource("89_8kb70"), ExtResource("90_gjosa"), ExtResource("91_suf26")])
+splatter_sound = ExtResource("92_gjosa")

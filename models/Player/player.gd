@@ -6,6 +6,11 @@ extends CharacterBody3D
 @export var rotation_speed := 2.5
 @export var acceleration := 8.0
 
+@export_group("Audio")
+@export var footstep_sounds: Array[AudioStream] = []
+@export var footstep_interval: float = 0.4  # Time between footsteps
+@export var running_footstep_interval: float = 0.25  # Faster when running
+
 @export_group("Controls")
 @export_enum("Tank", "Analog") var control_scheme := 0  # 0 = Tank, 1 = Analog
 
@@ -51,6 +56,10 @@ var right_hand: Node3D = null
 @onready var _skin: Node3D = $Armature/Skeleton3D
 @onready var _armature: Node3D = $Armature
 
+# Audio
+var footstep_player: AudioStreamPlayer = null
+var footstep_timer: Timer = null
+var is_currently_moving: bool = false
 
 func _ready() -> void:
 	# Activate starting camera
@@ -75,9 +84,13 @@ func _ready() -> void:
 	add_child(right_hand)
 	right_hand.position = hand_position
 	
+	# Setup footstep audio system
+	setup_footstep_audio()
+	
+	
+	
 	print("Player: Inventory system ready")
 	print("Control Scheme: ", "Tank" if control_scheme == 0 else "Analog")
-
 
 func find_ui() -> void:
 	var ui_nodes = get_tree().get_nodes_in_group("ui")
@@ -92,6 +105,61 @@ func find_ui() -> void:
 			interaction_ui = get_node(path)
 			update_inventory_ui()
 			break
+
+# ============================================================================
+# FOOTSTEP AUDIO SYSTEM
+# ============================================================================
+
+func setup_footstep_audio() -> void:
+	"""Initialize footstep audio system"""
+	# Create audio player
+	footstep_player = AudioStreamPlayer.new()
+	footstep_player.name = "FootstepPlayer"
+	footstep_player.volume_db = -5.0  # Slightly quieter than default
+	add_child(footstep_player)
+	
+	# Create timer
+	footstep_timer = Timer.new()
+	footstep_timer.name = "FootstepTimer"
+	footstep_timer.one_shot = false
+	footstep_timer.timeout.connect(_on_footstep_timer_timeout)
+	add_child(footstep_timer)
+	
+	print("Player: Footstep audio system ready with ", footstep_sounds.size(), " sounds")
+
+
+func _on_footstep_timer_timeout() -> void:
+	"""Play a random footstep sound"""
+	if footstep_sounds.is_empty():
+		return
+	
+	# Pick a random footstep sound
+	var random_index = randi() % footstep_sounds.size()
+	footstep_player.stream = footstep_sounds[random_index]
+	footstep_player.play()
+
+
+func update_footstep_audio() -> void:
+	"""Start or stop footstep sounds based on movement"""
+	var should_play_footsteps = can_move and velocity.length() > 0.1 and current_state == State.NORMAL
+	
+	if should_play_footsteps and not is_currently_moving:
+		# Start playing footsteps
+		is_currently_moving = true
+		var interval = running_footstep_interval if is_running else footstep_interval
+		footstep_timer.wait_time = interval
+		footstep_timer.start()
+		
+	elif not should_play_footsteps and is_currently_moving:
+		# Stop playing footsteps
+		is_currently_moving = false
+		footstep_timer.stop()
+		
+	elif should_play_footsteps and is_currently_moving:
+		# Update interval based on running state
+		var interval = running_footstep_interval if is_running else footstep_interval
+		if footstep_timer.wait_time != interval:
+			footstep_timer.wait_time = interval
 
 
 func _input(event: InputEvent) -> void:
@@ -189,6 +257,8 @@ func process_tank_movement(delta: float) -> void:
 	
 	if move_input != 0:
 		_skin.rotation.y = 0
+		
+	update_footstep_audio()  
 
 
 func process_analog_movement(delta: float) -> void:
@@ -284,6 +354,8 @@ func process_analog_movement(delta: float) -> void:
 		velocity.y -= 20.0 * delta
 	
 	move_and_slide()
+	
+	update_footstep_audio()  # Add this line
 
 
 func process_hiding_state(_delta: float) -> void:

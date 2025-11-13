@@ -242,11 +242,15 @@ func has_line_of_sight_to_player(player: CharacterBody3D = null) -> bool:
 
 
 func start_chasing_player(player: CharacterBody3D) -> void:
-	"""Begin pursuit"""
-	target_player = player
-	current_state = State.CHASE
-	nav_agent.target_position = player.global_position
-	print("Killer: PLAYER SPOTTED! Beginning chase...")
+	"""On Floor 5: Jump scare instead of chase"""
+	print("Killer: PLAYER SPOTTED! JUMP SCARE!")
+	
+	# Trigger the jump scare overlay
+	var jump_scare = get_tree().get_first_node_in_group("jump_scare")
+	if jump_scare and jump_scare.has_method("trigger"):
+		jump_scare.trigger()
+	else:
+		push_error("Killer: No JumpScare node found in scene!")
 
 
 func lose_player() -> void:
