@@ -3,9 +3,12 @@ extends Area3D
 @export var requires_item: String = "Light Panel"
 @export var switch_panel_node: Node3D  # The panel that will rotate 180 degrees
 @export var lights_to_activate: Array[Node3D] = []  # Drag lights here that should turn on
+@export var examine_camera: Camera3D  # Camera positioned to zoom in on switch
 
 var player_nearby: bool = false
 var is_fixed: bool = false
+var is_examining: bool = false
+var previous_camera: Camera3D = null
 var interaction_ui = null
 
 func _ready():
@@ -32,26 +35,34 @@ func find_ui():
 			return
 
 func _process(_delta):
-	if player_nearby and Input.is_action_just_pressed("interact"):
-		interact_with_switch()
+	if Input.is_action_just_pressed("interact"):
+		if is_examining:
+			exit_examination()
+		elif player_nearby:
+			interact_with_switch()
 
 func _on_body_entered(body):
 	if body.is_in_group("player"):
 		player_nearby = true
-		update_interaction_prompt(body)
+		if not is_examining:
+			update_interaction_prompt(body)
 
 func _on_body_exited(body):
 	if body.is_in_group("player"):
 		player_nearby = false
-		hide_interaction_prompt()
+		if not is_examining:
+			hide_interaction_prompt()
 
 func update_interaction_prompt(player):
 	if not is_fixed:
-		var has_panel = player.get_held_item_name() == requires_item
+		var has_panel = player.has_item(requires_item)
 		if has_panel:
 			show_interaction_prompt("Press E to install Light Panel")
 		else:
 			show_interaction_prompt("Press E to examine Light Switch")
+	else:
+		# After it's fixed, can still examine
+		show_interaction_prompt("Press E to examine Light Switch")
 
 func interact_with_switch():
 	var player = get_tree().get_first_node_in_group("player")
@@ -59,19 +70,66 @@ func interact_with_switch():
 		return
 	
 	if not is_fixed:
-		if player.get_held_item_name() == requires_item:
+		if player.has_item(requires_item):
 			install_panel(player)
 		else:
-			# Just examine - show broken message
-			show_interaction_prompt("Not working. Looks like it needs a new front panel.")
-			# Auto-hide after 2 seconds
-			await get_tree().create_timer(2.0).timeout
-			if player_nearby:
-				update_interaction_prompt(player)
+			# Enter examination mode to show broken switch up close
+			enter_examination(player, false)
+	else:
+		# After fixed, just examine to admire the handiwork
+		enter_examination(player, true)
+
+func enter_examination(player, is_post_fix: bool):
+	if not examine_camera:
+		print("LightSwitch: No examine camera set!")
+		# Fallback to old behavior
+		var message = "Looks like the lights are on now." if is_post_fix else "Not working. Looks like it needs a new front panel."
+		show_interaction_prompt(message)
+		await get_tree().create_timer(2.0).timeout
+		if player_nearby:
+			update_interaction_prompt(player)
+		return
+	
+	is_examining = true
+	previous_camera = get_viewport().get_camera_3d()
+	examine_camera.current = true
+	
+	if player.has_method("lock_movement"):
+		player.lock_movement()
+	
+	# Different message depending on state
+	var examine_text = ""
+	if is_post_fix:
+		examine_text = "Looks like the lights are on now.\n\nPress E to stop examining"
+	else:
+		examine_text = "Not working. Looks like it needs a new front panel.\n\nPress E to stop examining"
+	
+	show_interaction_prompt(examine_text)
+	print("LightSwitch: Entering examination mode")
+
+func exit_examination():
+	if not is_examining:
+		return
+	
+	is_examining = false
+	
+	if previous_camera:
+		previous_camera.current = true
+	
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.has_method("unlock_movement"):
+		player.unlock_movement()
+	
+	if player_nearby and player:
+		update_interaction_prompt(player)
+	else:
+		hide_interaction_prompt()
+	
+	print("LightSwitch: Exiting examination mode")
 
 func install_panel(player):
-	if player.has_method("unequip_item"):
-		player.unequip_item()
+	if player.has_method("remove_from_inventory"):
+		player.remove_from_inventory(requires_item)
 	
 	is_fixed = true
 	print("LightSwitch: Panel installed! Rotating and activating lights...")
@@ -86,7 +144,8 @@ func install_panel(player):
 			light.visible = true
 			print("LightSwitch: Activated light: ", light.name)
 	
-	hide_interaction_prompt()
+	# Auto-examine after installation to show the fixed switch
+	enter_examination(player, true)
 
 func show_interaction_prompt(text: String):
 	if interaction_ui and interaction_ui.has_method("show_prompt"):

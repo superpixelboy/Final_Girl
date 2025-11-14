@@ -38,15 +38,23 @@ func find_ui():
 
 func _on_body_entered(body):
 	if body.is_in_group("player") and not has_triggered:
-		# Check if player has the elevator key
-		if body.has_method("get_held_item_name"):
-			var held_item = body.get_held_item_name()
-			if held_item == required_item:
+		# Check if player has the elevator key IN THEIR INVENTORY (not just equipped)
+		if body.has_method("has_item"):
+			if body.has_item(required_item):
 				has_triggered = true
 				trigger_killer_escape_sequence()
 			else:
 				print("EscapeSequence: Player doesn't have elevator key yet")
-
+		else:
+			# Fallback: check held item (old method)
+			if body.has_method("get_held_item_name"):
+				var held_item = body.get_held_item_name()
+				if held_item == required_item:
+					has_triggered = true
+					trigger_killer_escape_sequence()
+				else:
+					print("EscapeSequence: Player doesn't have elevator key yet")
+					
 func trigger_killer_escape_sequence():
 	print("EscapeSequence: TRIGGERED!")
 	

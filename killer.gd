@@ -24,6 +24,7 @@ var current_state: State = State.IDLE
 var target_player: CharacterBody3D = null
 var patrol_points: Array[Vector3] = []
 var current_patrol_index: int = 0
+var is_active: bool = false  
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var detection_area: Area3D = $DetectionArea
@@ -50,6 +51,7 @@ func _ready() -> void:
 		return
 	
 	# Start in appropriate state
+	is_active = true  # ← SET FLAG
 	current_state = State.PATROL if not patrol_points.is_empty() else State.IDLE
 	
 	if current_state == State.PATROL:
@@ -61,6 +63,7 @@ func _ready() -> void:
 func activate() -> void:
 	"""Called by trigger zone to activate the killer"""
 	print("Killer: ACTIVATED! Beginning hunt...")
+	is_active = true  # ← ADD THIS LINE!
 	visible = true
 	set_physics_process(true)
 	
@@ -262,6 +265,9 @@ func lose_player() -> void:
 
 func _on_detection_body_entered(body: Node3D) -> void:
 	"""Something entered detection sphere"""
+	if not is_active:
+		return  # Ignore detections when inactive
+		
 	if body.is_in_group("player") and current_state != State.CHASE:
 		print("Killer: Player entered detection range")
 		if has_line_of_sight_to_player(body):  # ✅ Pass the player body

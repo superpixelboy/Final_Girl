@@ -1,17 +1,13 @@
-[gd_scene load_steps=31 format=4 uid="uid://68dnfxcgw3ah"]
+[gd_scene load_steps=27 format=4 uid="uid://68dnfxcgw3ah"]
 
 [ext_resource type="Script" uid="uid://bqmaek3uxlw4s" path="res://models/Player/player.gd" id="1_qt0oc"]
 [ext_resource type="Texture2D" uid="uid://ommbqklfo0k" path="res://models/Player/player_idle_FullBodyLowRes.png" id="1_xv7qy"]
-[ext_resource type="AudioStream" uid="uid://ukuk6xp07ypl" path="res://Sounds/Footstep1.mp3" id="2_1fees"]
 [ext_resource type="Shader" uid="uid://cqeg2bo0ighbs" path="res://models/Player/default_object.gdshader" id="2_5jul1"]
 [ext_resource type="Texture2D" uid="uid://br0aecgq3cki1" path="res://models/Player/player_idle_HairBob.png" id="2_qt0oc"]
 [ext_resource type="Texture2D" uid="uid://clvwq0txf2d30" path="res://models/Player/player_idle_HeadTexture.png" id="3_5jul1"]
-[ext_resource type="AudioStream" uid="uid://dhxgp38mp6ubd" path="res://Sounds/Footstep2.mp3" id="3_mm2fn"]
-[ext_resource type="AudioStream" uid="uid://bokcv5ti5bdcl" path="res://Sounds/Footstep3.mp3" id="4_j2yna"]
 [ext_resource type="Shader" uid="uid://dbrrmasuevcoe" path="res://models/Player/player_hair.gdshader" id="4_oo3dk"]
-[ext_resource type="AudioStream" uid="uid://852jsgh5gsf1" path="res://Sounds/Footstep4.mp3" id="5_csevt"]
 [ext_resource type="Texture2D" uid="uid://dp07la207p2my" path="res://models/Player/player_idle_HairBob2.png" id="5_gp40u"]
-[ext_resource type="AudioStream" uid="uid://b7kawfu5ap7r2" path="res://Sounds/Footstep5.mp3" id="6_bye5h"]
+[ext_resource type="AudioStream" uid="uid://d0e2eyt4xhd2f" path="res://Sounds/concrete-footsteps-6752.mp3" id="7_j2yna"]
 [ext_resource type="Texture2D" uid="uid://bgcua5isvon55" path="res://Images/Shadow.png" id="13_mm2fn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oo3dk"]
@@ -1595,11 +1591,11 @@ height = 3.8365479
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, 0, 0, 0)
 script = ExtResource("1_qt0oc")
-footstep_sounds = Array[AudioStream]([ExtResource("2_1fees"), ExtResource("3_mm2fn"), ExtResource("4_j2yna"), ExtResource("5_csevt"), ExtResource("6_bye5h")])
 footstep_interval = 0.5
 running_footstep_interval = 0.4
 hand_position = Vector3(0, 5, 0)
 hand_item_scale = Vector3(4, 4, 4)
+footstep_loop = ExtResource("7_j2yna")
 
 [node name="Armature" type="Node3D" parent="."]
 transform = Transform3D(0.01, 0, 0, 0, -4.3711387e-10, -0.01, 0, 0.01, -4.3711387e-10, 0, 0, 0)

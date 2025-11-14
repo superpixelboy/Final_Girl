@@ -1,9 +1,7 @@
-[gd_scene load_steps=132 format=3 uid="uid://bi2bgol3b2cxr"]
+[gd_scene load_steps=131 format=3 uid="uid://bi2bgol3b2cxr"]
 
 [ext_resource type="PackedScene" uid="uid://bvexokqfbl8hl" path="res://models/Hospital Asset Pack/models/SM_GurneyBed.fbx" id="1_1eqqd"]
 [ext_resource type="PackedScene" uid="uid://cip20uy2534vs" path="res://models/Hospital Asset Pack/models/SM_BlisterPack.fbx" id="2_3la4u"]
-[ext_resource type="AudioStream" uid="uid://d0e2eyt4xhd2f" path="res://Sounds/concrete-footsteps-6752.mp3" id="3_88gt0"]
-[ext_resource type="AudioStream" uid="uid://b4j1dctkpvri7" path="res://Sounds/Footsteps_walk.mp3" id="3_ftdjr"]
 [ext_resource type="PackedScene" uid="uid://cl1csdxqy1kwn" path="res://models/Hospital Asset Pack/models/SM_WheelChair.fbx" id="3_x7bi6"]
 [ext_resource type="PackedScene" uid="uid://kefi0sale7dw" path="res://models/Hospital Asset Pack/models/SM_Bedframe.fbx" id="4_ro5ai"]
 [ext_resource type="PackedScene" uid="uid://d0r6ang2la4gs" path="res://models/Hospital Asset Pack/models/SM_BedCover.fbx" id="5_sy202"]
@@ -146,13 +144,16 @@ size = Vector3(1.25, 1, 1.5421894)
 size = Vector3(1.1928711, 1, 1.1177368)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dc5iw"]
-size = Vector3(1.5562134, 1, 0.26748657)
+size = Vector3(0.6915283, 1, 0.26748657)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nceqk"]
 size = Vector3(1.5327148, 1, 0.26748657)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i1pty"]
 size = Vector3(0.5102539, 1, 0.5205879)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k6bo5"]
+size = Vector3(1.0124512, 1, 0.2859192)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t4mdt"]
 size = Vector3(0.5028076, 1, 0.41558838)
@@ -213,9 +214,10 @@ transform = Transform3D(-0.022028854, 0, 0.39939296, 0, 0.4, 0, -0.39939296, 0, 
 walk_speed = 4.5
 run_speed = 6.5
 rotation_speed = 6.0
+acceleration = null
 control_scheme = 1
-footstep_walk_loop = ExtResource("3_ftdjr")
-footstep_run_loop = ExtResource("3_88gt0")
+turn_animation_threshold = null
+interaction_range = null
 
 [node name="MrNiceGuy" type="Node3D" parent="."]
 
@@ -790,7 +792,7 @@ script = ExtResource("21_oildv")
 camera = NodePath("../../Cameras/CamCenter2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZoneCenter2"]
-transform = Transform3D(2.9999995, 0, -2.842171e-14, 0, 3, 0, 0, 0, 9.6, -0.22773433, 0.25, 1.4159098)
+transform = Transform3D(2.9999995, 0, -2.842171e-14, 0, 3, 0, 0, 0, 9.6, 1.0692929, 0.25, 1.4159098)
 shape = SubResource("BoxShape3D_dc5iw")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZoneCenter2"]
@@ -809,6 +811,15 @@ camera = NodePath("../../Cameras/CamCenter3")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZoneCenter3"]
 transform = Transform3D(2.9999995, 0, -2.842171e-14, 0, 3, 0, 0, 0, 9.6, -0.31314588, 0.25, 5.180998)
 shape = SubResource("BoxShape3D_ro5ai")
+
+[node name="ZoneCenterSwitch" type="Area3D" parent="FixedCameras/CameraTriggers" node_paths=PackedStringArray("camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0992298, -2.25, 10.814171)
+script = ExtResource("21_oildv")
+camera = NodePath("../../Cameras/CamCenterSwitch")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FixedCameras/CameraTriggers/ZoneCenterSwitch"]
+transform = Transform3D(2.9999995, 0, -2.842171e-14, 0, 3, 0, 0, 0, 9.6, -0.23294616, 0.25, 1.1882734)
+shape = SubResource("BoxShape3D_k6bo5")
 
 [node name="ZoneCenter4" type="Area3D" parent="FixedCameras/CameraTriggers" node_paths=PackedStringArray("camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.285528, -2.25, 13.679077)
@@ -932,7 +943,7 @@ transform = Transform3D(-0.84228975, -0.14502558, 0.51914907, -0.0024480508, 0.9
 transform = Transform3D(-0.070391014, -0.704461, 0.7062435, -0.042550683, 0.7094758, 0.70344406, -0.99661165, 0.019465001, -0.07991602, 0.99425924, 0.20121098, 15.890774)
 
 [node name="CamCenterSwitch" type="Camera3D" parent="FixedCameras/Cameras" groups=["camera"]]
-transform = Transform3D(0.99979943, 0.0069549275, -0.018781222, -0.0025150478, 0.97394335, 0.22677766, 0.019869067, -0.22668493, 0.9737655, -2.3400664, -1.25875, 11.556801)
+transform = Transform3D(0.9978699, 0.06502603, -0.005223349, -0.037016787, 0.6303373, 0.7754384, 0.05371614, -0.7735933, 0.63140166, -2.4225838, 0.20121098, 13.299416)
 
 [node name="CamHallE1" type="Camera3D" parent="FixedCameras/Cameras" groups=["camera"]]
 transform = Transform3D(-0.9999654, -8.679202e-08, -0.008325095, -0.005142209, 0.7864393, 0.61764616, 0.006547129, 0.6176676, -0.7864121, -5.2500024, -0.4388888, 21.884623)
@@ -1784,12 +1795,11 @@ transform = Transform3D(0.98296744, 0, 0.18377979, 0, 1, 0, -0.18377979, 0, 0.98
 [node name="SM_Tower" parent="Center" instance=ExtResource("47_j5njb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.440395, 0.9796888, 0.80812526)
 
-[node name="Light_switch" type="Area3D" parent="Center" node_paths=PackedStringArray("switch_panel_node", "lights_to_activate", "examine_camera")]
+[node name="Light_switch" type="Area3D" parent="Center" node_paths=PackedStringArray("switch_panel_node", "lights_to_activate")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.856622, 0, 2.3307998)
 script = ExtResource("65_4rblq")
 switch_panel_node = NodePath("LightSwitch2")
 lights_to_activate = [NodePath("../../Lighting/OmniLight3D/FarHallLights")]
-examine_camera = NodePath("../../FixedCameras/Cameras/CamCenterSwitch")
 
 [node name="LightSwitch2" parent="Center/Light_switch" instance=ExtResource("35_4rblq")]
 transform = Transform3D(-1.2317136e-07, -0.99999994, 0, 2.8178322, -4.3711385e-08, 0, 0, 0, 2.5061984, 0, 1.406, 0)

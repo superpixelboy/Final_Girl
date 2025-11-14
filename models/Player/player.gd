@@ -6,10 +6,6 @@ extends CharacterBody3D
 @export var rotation_speed := 2.5
 @export var acceleration := 8.0
 
-@export_group("Audio")
-@export var footstep_sounds: Array[AudioStream] = []
-@export var footstep_interval: float = 0.4  # Time between footsteps
-@export var running_footstep_interval: float = 0.25  # Faster when running
 
 @export_group("Controls")
 @export_enum("Tank", "Analog") var control_scheme := 0  # 0 = Tank, 1 = Analog
@@ -56,10 +52,11 @@ var right_hand: Node3D = null
 @onready var _skin: Node3D = $Armature/Skeleton3D
 @onready var _armature: Node3D = $Armature
 
-# Audio
-var footstep_player: AudioStreamPlayer = null
-var footstep_timer: Timer = null
-var is_currently_moving: bool = false
+@export_group("Audio")
+@export var footstep_walk_loop: AudioStream  # Slow version for walking
+@export var footstep_run_loop: AudioStream   # Fast version for running
+
+var footstep_player: AudioStreamPlayer = null 
 
 func _ready() -> void:
 	# Activate starting camera
@@ -92,6 +89,7 @@ func _ready() -> void:
 	print("Player: Inventory system ready")
 	print("Control Scheme: ", "Tank" if control_scheme == 0 else "Analog")
 
+
 func find_ui() -> void:
 	var ui_nodes = get_tree().get_nodes_in_group("ui")
 	if ui_nodes.size() > 0:
@@ -109,59 +107,60 @@ func find_ui() -> void:
 # ============================================================================
 # FOOTSTEP AUDIO SYSTEM
 # ============================================================================
-
 func setup_footstep_audio() -> void:
 	"""Initialize footstep audio system"""
-	# Create audio player
 	footstep_player = AudioStreamPlayer.new()
 	footstep_player.name = "FootstepPlayer"
-	footstep_player.volume_db = -5.0  # Slightly quieter than default
+	footstep_player.volume_db = -5.0
 	add_child(footstep_player)
 	
-	# Create timer
-	footstep_timer = Timer.new()
-	footstep_timer.name = "FootstepTimer"
-	footstep_timer.one_shot = false
-	footstep_timer.timeout.connect(_on_footstep_timer_timeout)
-	add_child(footstep_timer)
-	
-	print("Player: Footstep audio system ready with ", footstep_sounds.size(), " sounds")
-
-
-func _on_footstep_timer_timeout() -> void:
-	"""Play a random footstep sound"""
-	if footstep_sounds.is_empty():
-		return
-	
-	# Pick a random footstep sound
-	var random_index = randi() % footstep_sounds.size()
-	footstep_player.stream = footstep_sounds[random_index]
-	footstep_player.play()
-
+	# Start with walking loop
+	if footstep_walk_loop:
+		footstep_player.stream = footstep_walk_loop
+		
+		if footstep_walk_loop is AudioStreamWAV:
+			footstep_walk_loop.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		elif footstep_walk_loop is AudioStreamOggVorbis:
+			footstep_walk_loop.loop = true
+		
+		# Also set loop on run audio if it exists
+		if footstep_run_loop:
+			if footstep_run_loop is AudioStreamWAV:
+				footstep_run_loop.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			elif footstep_run_loop is AudioStreamOggVorbis:
+				footstep_run_loop.loop = true
+		
+		footstep_player.play()
+		footstep_player.volume_db = -80.0
+		print("Player: Footstep audio system ready")
 
 func update_footstep_audio() -> void:
-	"""Start or stop footstep sounds based on movement"""
-	var should_play_footsteps = can_move and velocity.length() > 0.1 and current_state == State.NORMAL
+	"""Control footstep volume and swap audio based on running"""
+	var has_input = false
 	
-	if should_play_footsteps and not is_currently_moving:
-		# Start playing footsteps
-		is_currently_moving = true
-		var interval = running_footstep_interval if is_running else footstep_interval
-		footstep_timer.wait_time = interval
-		footstep_timer.start()
+	if control_scheme == 0:
+		var move_input = Input.get_axis("tank_forward", "tank_back")
+		has_input = abs(move_input) > 0.1
+	else:
+		var input_dir = Vector2(
+			Input.get_action_strength("tank_rotate_right") - Input.get_action_strength("tank_rotate_left"),
+			Input.get_action_strength("tank_back") - Input.get_action_strength("tank_forward")
+		)
+		has_input = input_dir.length() > 0.1
+	
+	var should_play_footsteps = can_move and has_input and current_state == State.NORMAL
+	
+	if should_play_footsteps:
+		# Switch audio stream based on running
+		var target_stream = footstep_run_loop if is_running else footstep_walk_loop
+		if footstep_player.stream != target_stream and target_stream != null:
+			footstep_player.stream = target_stream
+			footstep_player.play()
 		
-	elif not should_play_footsteps and is_currently_moving:
-		# Stop playing footsteps
-		is_currently_moving = false
-		footstep_timer.stop()
+		footstep_player.volume_db = -5.0
+	else:
+		footstep_player.volume_db = -80.0
 		
-	elif should_play_footsteps and is_currently_moving:
-		# Update interval based on running state
-		var interval = running_footstep_interval if is_running else footstep_interval
-		if footstep_timer.wait_time != interval:
-			footstep_timer.wait_time = interval
-
-
 func _input(event: InputEvent) -> void:
 	# Toggle control scheme with F1
 	if event is InputEventKey and event.pressed and event.keycode == KEY_F1:
