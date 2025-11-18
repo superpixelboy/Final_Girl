@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://5xwdq43p33kg"]
+
+[ext_resource type="Script" uid="uid://clp63e44i65w" path="res://item_examination.gd" id="1_po7k1"]
+[ext_resource type="AudioStream" uid="uid://dhoba2gbr8e7q" path="res://Sounds/Item Pickup.mp3" id="2_fogpm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po7k1"]
+albedo_color = Color(0, 0, 0, 1)
+
+[node name="ItemExamination" type="Node3D" node_paths=PackedStringArray("examination_camera", "item_holder", "examination_light") groups=["item_examiner"]]
+script = ExtResource("1_po7k1")
+examination_camera = NodePath("Camera3D")
+item_holder = NodePath("ItemHolder")
+examination_light = NodePath("DirectionalLight3D")
+pickup_sound = ExtResource("2_fogpm")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5397949)
+
+[node name="ItemHolder" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.9754295, -5.1560326, -6.837433)
+size = Vector3(164.64543, 116.18913, 0.05859375)
+material = SubResource("StandardMaterial3D_po7k1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.62823015, 0.48815623, 0.60583025, -0.6329807, -0.1320876, 0.76281595, 0.45239606, -0.8627028, 0.22601199, 0, 0, 0)
+light_energy = 3.564
+light_indirect_energy = 0.185
+light_volumetric_fog_energy = 1.728
+light_angular_distance = 8.18
+directional_shadow_mode = 0
+sky_mode = 1

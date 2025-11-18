@@ -75,6 +75,7 @@ func _ready() -> void:
 	# Find UI layer
 	call_deferred("find_ui")
 	
+	
 	# Create right hand position for holding items
 	right_hand = Node3D.new()
 	right_hand.name = "RightHandPosition"
@@ -511,9 +512,9 @@ func switch_to_item(item_name_param: String) -> void:
 	if active_item != "" and inventory.has(active_item):
 		inventory[active_item].visible = false
 	
-	# Show new active item
+	# Set new active item (but keep it invisible for now)
 	active_item = item_name_param
-	inventory[active_item].visible = true
+	# inventory[active_item].visible = true  # DISABLED - don't show items yet
 	
 	print("Active item: ", active_item)
 	update_inventory_ui()

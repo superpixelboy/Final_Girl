@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://br4il4dqddgxy"]
+[gd_scene load_steps=8 format=3 uid="uid://br4il4dqddgxy"]
 
 [ext_resource type="Script" uid="uid://dbwruadyetrn7" path="res://killer.gd" id="1_eikwx"]
 [ext_resource type="PackedScene" uid="uid://ymfbsb74ftb6" path="res://models/Killer/KillerTest.glb" id="2_erd01"]
+[ext_resource type="PackedScene" uid="uid://ktvs6vqccnrx" path="res://models/Killer/MrNiceGuy.glb" id="3_erd01"]
+[ext_resource type="Texture2D" uid="uid://bgcua5isvon55" path="res://Images/Shadow.png" id="4_i3l7b"]
+[ext_resource type="PackedScene" uid="uid://b2gi3eypsf7ri" path="res://mr_nice_guy.tscn" id="5_srdra"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3l7b"]
 
@@ -15,6 +18,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_i3l7b")
 
 [node name="KillerTest" parent="." instance=ExtResource("2_erd01")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+visible = false
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 path_desired_distance = 0.5
@@ -26,3 +31,18 @@ avoidance_enabled = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 1, 1.75)
 shape = SubResource("SphereShape3D_srdra")
+
+[node name="MrNiceGuyold" parent="." instance=ExtResource("3_erd01")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.325, 0)
+visible = false
+
+[node name="Shadow" type="Sprite3D" parent="."]
+transform = Transform3D(0.38469425, 0, 0, 0, -1.8683911e-08, 0.71239674, 0, -0.42743805, -3.113985e-08, -0.015733508, -0.29398632, 0.075)
+cast_shadow = 0
+ignore_occlusion_culling = true
+offset = Vector2(0, 0.01)
+modulate = Color(1, 1, 1, 0.68235296)
+texture = ExtResource("4_i3l7b")
+
+[node name="MrNiceGuy" parent="." instance=ExtResource("5_srdra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.33020023, 0)

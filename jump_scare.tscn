@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://b1dgsfuao1j6x"]
 
 [ext_resource type="Script" uid="uid://cn8n3wu1envo0" path="res://jump_scare.gd" id="1_3251x"]
-[ext_resource type="Texture2D" uid="uid://bmykj3si6hbf4" path="res://Images/JumpScareFrames1.png" id="2_xobg2"]
-[ext_resource type="Texture2D" uid="uid://de4gtdt8hs34u" path="res://Images/JumpScareFrames3.png" id="3_jwcxt"]
+[ext_resource type="Texture2D" uid="uid://4e52spq2gnot" path="res://models/Killer/MrNGJumpscare1.5.png" id="2_xobg2"]
+[ext_resource type="Texture2D" uid="uid://dbp58ic4hky6k" path="res://models/Killer/MrNGJumpscare2.png" id="3_jwcxt"]
 [ext_resource type="AudioStream" uid="uid://defgxhu3x3k6m" path="res://Sounds/JumpScareSound.mp3" id="4_qntot"]
 [ext_resource type="AudioStream" uid="uid://diktb7xpfm2f5" path="res://Sounds/splatter_test.mp3" id="5_xobg2"]
 
@@ -23,6 +23,10 @@ color = Color(0, 0, 0, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -139.0
+offset_top = -80.0
+offset_right = 160.0
+offset_bottom = 34.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_xobg2")

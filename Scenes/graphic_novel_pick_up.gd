@@ -1,14 +1,14 @@
 extends Area3D
 
-@export var item_name: String = "Crowbar"
-@export_multiline var item_description: String = "A heavy steel crowbar. Perfect for prying open locked doors or breaking through wooden boards."
-@export var pickup_prompt: String = "Press E to examine Crowbar"
+@export var item_name: String = "Graphic Novel"
+@export_multiline var item_description: String = "I guess someone likes reading comics."
+@export var pickup_prompt: String = "Press E to pick up Graphic Novel"
 
 # EXAMINATION POSE - Adjust in inspector
 @export_group("Examination Pose")
-@export var exam_position: Vector3 = Vector3(0, 0, 0)
-@export var exam_rotation: Vector3 = Vector3(0, 45, 0)
-@export var exam_scale: float = 0.3
+@export var exam_position: Vector3 = Vector3(0, 0.5, 0)
+@export var exam_rotation: Vector3 = Vector3(-20, 0, 0)
+@export var exam_scale: float = 0.8
 
 var player_nearby: bool = false
 var is_picked_up: bool = false
@@ -17,8 +17,10 @@ var interaction_ui = null
 func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	
 	collision_layer = 2
 	collision_mask = 1
+	
 	call_deferred("find_ui")
 
 func find_ui():
@@ -32,7 +34,7 @@ func _process(_delta):
 			start_examination()
 
 func start_examination():
-	print("Crowbar: Starting examination")
+	print("GraphicNovel: Starting examination")
 	is_picked_up = true
 	hide_interaction_prompt()
 	
@@ -42,10 +44,10 @@ func start_examination():
 		print("ERROR: No item_examiner found!")
 		return
 	
-	# Get the mesh child (just like before)
-	var mesh_node = get_node_or_null("CrowbarMesh")
+	# Get the mesh child (update this to match your actual mesh node name)
+	var mesh_node = get_node_or_null("GraphicNovelMesh")
 	if mesh_node:
-		print("Found CrowbarMesh, removing from pickup...")
+		print("Found GraphicNovelMesh, removing from pickup...")
 		remove_child(mesh_node)
 		
 		# Pass to examination with pose
@@ -58,7 +60,7 @@ func start_examination():
 			exam_scale
 		)
 	else:
-		print("ERROR: No CrowbarMesh child found!")
+		print("ERROR: No GraphicNovelMesh child found!")
 	
 	# Hide pickup
 	visible = false

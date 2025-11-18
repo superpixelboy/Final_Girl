@@ -28,7 +28,7 @@ var is_active: bool = false
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var detection_area: Area3D = $DetectionArea
-@onready var anim_player: AnimationPlayer = $KillerTest/AnimationPlayer 
+@onready var anim_player: AnimationPlayer = $MrNiceGuy/AnimationPlayer 
 
 func _ready() -> void:
 	# Setup navigation agent
@@ -90,7 +90,7 @@ func _physics_process(delta: float) -> void:
 func process_idle(_delta: float) -> void:
 	"""Stand still, watch for player"""
 	if anim_player and anim_player.current_animation != "Idle":
-		anim_player.play("Idle")
+		anim_player.play("idle")
 
 func set_patrol_waypoints(waypoints: Array[Node3D]) -> void:
 	"""Set new patrol waypoints from an array of Node3D markers"""
@@ -128,7 +128,7 @@ func load_patrol_points() -> void:
 func process_patrol(delta: float) -> void:
 	"""Walk between patrol points"""
 	if anim_player and anim_player.current_animation != "Patrol":
-		anim_player.play("Patrol")
+		anim_player.play("patrol")
 	
 	if patrol_points.is_empty():
 		current_state = State.IDLE
@@ -146,7 +146,7 @@ func process_patrol(delta: float) -> void:
 func process_chase(delta: float) -> void:
 	"""Chase the player relentlessly"""
 	if anim_player and anim_player.current_animation != "Chase":
-		anim_player.play("Chase")
+		anim_player.play("chase")
 	
 	if not target_player or not is_instance_valid(target_player):
 		lose_player()

@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://rmneb13nxi7h"]
 
 [ext_resource type="PackedScene" uid="uid://boarx8826mckh" path="res://models/Hospital Asset Pack/models/SM_Hallway_Wall_1.fbx" id="1_gtltt"]
-[ext_resource type="Texture2D" uid="uid://buui88wwq7hqn" path="res://models/M_Smiley_Hall_wall.png" id="2_ysogk"]
+[ext_resource type="Texture2D" uid="uid://dtuuvih3mo8gt" path="res://M_Smiley_Hall_wall2.png" id="2_gtltt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mx46g"]
-albedo_texture = ExtResource("2_ysogk")
+albedo_texture = ExtResource("2_gtltt")
 
 [node name="SM_Hallway_Wall_1" instance=ExtResource("1_gtltt")]
 

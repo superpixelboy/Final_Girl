@@ -1,73 +1,101 @@
 extends Area3D
 
 @export var item_name: String = "Power Cord"
-@export var pickup_prompt: String = "Press E to pick up Power Cord"
+@export_multiline var item_description: String = "A standard electrical power cord. Could power something nearby."
+@export var pickup_prompt: String = "Press E to examine Power Cord"
+
+# EXAMINATION POSE - Adjust in inspector
+@export_group("Examination Pose")
+@export var exam_position: Vector3 = Vector3(0, 0, -0.5)
+@export var exam_rotation: Vector3 = Vector3(0, 0, 0)
+@export var exam_scale: float = 4.0
+
+@export_group("Visibility")
+@export var starts_hidden: bool = true  # NEW: Control if item is hidden at start
 
 var player_nearby: bool = false
 var is_picked_up: bool = false
+var is_revealed: bool = false  # NEW: Track if item has been revealed
 var interaction_ui = null
 
 func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	
-	# Set up collision
 	collision_layer = 2
 	collision_mask = 1
 	
-	print("PowerCord: Ready!")
+	# NEW: Start hidden if configured
+	if starts_hidden:
+		visible = false
+		monitoring = false
+		monitorable = false
+		is_revealed = false
+	else:
+		is_revealed = true
 	
-	# Find UI
 	call_deferred("find_ui")
 
 func find_ui():
-	# Method 1: Check ui group
 	var ui_nodes = get_tree().get_nodes_in_group("ui")
 	if ui_nodes.size() > 0:
 		interaction_ui = ui_nodes[0]
-		print("PowerCord: Found UI via group")
+
+# NEW: Public function to reveal the item (called by light switch)
+func reveal():
+	if is_revealed:
 		return
 	
-	# Method 2: Try common paths
-	var ui_paths = ["/root/Floor5/UI", "../UI", "../../UI"]
-	for path in ui_paths:
-		if has_node(path):
-			interaction_ui = get_node(path)
-			print("PowerCord: Found UI via path: ", path)
-			return
-	
-	print("WARNING PowerCord: Could not find UI!")
+	print("PowerCord: Being revealed!")
+	visible = true
+	monitoring = true
+	monitorable = true
+	is_revealed = true
 
 func _process(_delta):
-	if player_nearby and not is_picked_up and Input.is_action_just_pressed("interact"):
-		pickup_cord()
+	if player_nearby and not is_picked_up and is_revealed:
+		if Input.is_action_just_pressed("interact"):
+			start_examination()
+
+func start_examination():
+	print("PowerCord: Starting examination")
+	is_picked_up = true
+	hide_interaction_prompt()
+	
+	var examiner = get_tree().get_first_node_in_group("item_examiner")
+	if not examiner:
+		print("ERROR: No item_examiner found!")
+		return
+	
+	# Get the mesh child - MUST be named "PowerCordMesh"
+	var mesh_node = get_node_or_null("PowerCordMesh")
+	if mesh_node:
+		print("Found PowerCordMesh, removing from pickup...")
+		remove_child(mesh_node)
+		
+		examiner.start_examination(
+			mesh_node, 
+			item_name, 
+			item_description,
+			exam_position,
+			exam_rotation,
+			exam_scale
+		)
+	else:
+		print("ERROR: No PowerCordMesh child found!")
+	
+	visible = false
+	set_deferred("monitoring", false)
 
 func _on_body_entered(body):
-	if body.is_in_group("player") and not is_picked_up:
+	if body.is_in_group("player") and not is_picked_up and is_revealed:
 		player_nearby = true
 		show_interaction_prompt()
-		print("PowerCord: Player entered range")
 
 func _on_body_exited(body):
 	if body.is_in_group("player"):
 		player_nearby = false
 		hide_interaction_prompt()
-		print("PowerCord: Player left range")
-
-func pickup_cord():
-	print("PowerCord: Pickup initiated!")
-	is_picked_up = true
-	
-	var player = get_tree().get_first_node_in_group("player")
-	if player and player.has_method("equip_item"):
-		# Pass THIS node to equip_item so it gets parented to hand
-		player.equip_item(item_name, self)
-		player_nearby = false
-		print("Power cord picked up!")
-	
-	hide_interaction_prompt()
-	visible = false
-	set_deferred("monitoring", false)
 
 func show_interaction_prompt():
 	if interaction_ui and interaction_ui.has_method("show_prompt"):

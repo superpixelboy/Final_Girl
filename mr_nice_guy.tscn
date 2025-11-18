@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://b2gi3eypsf7ri"]
+
+[ext_resource type="PackedScene" uid="uid://ktvs6vqccnrx" path="res://models/Killer/MrNiceGuy.glb" id="1_bqkxw"]
+[ext_resource type="Shader" uid="uid://cqeg2bo0ighbs" path="res://models/Player/default_object.gdshader" id="2_6kxyu"]
+[ext_resource type="Texture2D" uid="uid://dosrg44b54psv" path="res://models/Killer/MrNiceGuy_MrNiceGuyBodyTex.png" id="3_j6iir"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_slx7x"]
+render_priority = 0
+shader = ExtResource("2_6kxyu")
+shader_parameter/color_texture = ExtResource("3_j6iir")
+shader_parameter/vertex_wobble = 1.0
+shader_parameter/affine_mapping = 1.0
+
+[node name="MrNiceGuy" instance=ExtResource("1_bqkxw")]
+
+[node name="BOdy]" parent="Armature_001/Skeleton3D" index="0"]
+material_override = SubResource("ShaderMaterial_slx7x")

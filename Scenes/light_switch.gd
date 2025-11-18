@@ -127,6 +127,8 @@ func exit_examination():
 	
 	print("LightSwitch: Exiting examination mode")
 
+# In the install_panel function, change this section:
+
 func install_panel(player):
 	if player.has_method("remove_from_inventory"):
 		player.remove_from_inventory(requires_item)
@@ -138,11 +140,16 @@ func install_panel(player):
 	if switch_panel_node:
 		switch_panel_node.rotation_degrees.y += 180
 	
-	# Turn on all the lights
+	# Turn on all the lights AND reveal items
 	for light in lights_to_activate:
 		if light:
 			light.visible = true
-			print("LightSwitch: Activated light: ", light.name)
+			
+			# NEW: If it has a reveal() method, call it (for hidden pickups)
+			if light.has_method("reveal"):
+				light.reveal()
+			
+			print("LightSwitch: Activated: ", light.name)
 	
 	# Auto-examine after installation to show the fixed switch
 	enter_examination(player, true)
